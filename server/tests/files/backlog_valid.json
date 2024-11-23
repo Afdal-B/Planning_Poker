@@ -1,0 +1,37 @@
+[
+    {
+        "en_tant_que": "Utilisateur",
+        "fonctionnalite": "Créer un compte",
+        "objectif": "Permettre aux utilisateurs de s'inscrire pour accéder à la plateforme"
+    },
+    {
+        "en_tant_que": "Administrateur",
+        "fonctionnalite": "Gérer les utilisateurs",
+        "objectif": "Ajouter, modifier ou supprimer des utilisateurs afin de maintenir une base de données propre"
+    },
+    {
+        "en_tant_que": "Utilisateur",
+        "fonctionnalite": "Créer une session de planning poker",
+        "objectif": "Collaborer avec les membres de l'équipe pour estimer les tâches"
+    },
+    {
+        "en_tant_que": "Administrateur",
+        "fonctionnalite": "Configurer les paramètres de session",
+        "objectif": "Personnaliser les options de session pour répondre aux besoins spécifiques de l'équipe"
+    },
+    {
+        "en_tant_que": "Utilisateur",
+        "fonctionnalite": "Voter pour une estimation",
+        "objectif": "Permettre à chaque membre de l'équipe de proposer une estimation sans biais"
+    },
+    {
+        "en_tant_que": "Administrateur",
+        "fonctionnalite": "Visualiser les résultats",
+        "objectif": "Analyser les votes pour atteindre un consensus sur les estimations"
+    },
+    {
+        "en_tant_que": "Utilisateur",
+        "fonctionnalite": "Consulter l'historique des sessions",
+        "objectif": "Référencer les estimations passées pour des tâches similaires"
+    }
+]
