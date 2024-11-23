@@ -1,0 +1,31 @@
+[
+    {
+        "en_tant_que": "Utilisateur",
+        "fonctionnalite": "Créer un compte"
+    },
+    {
+        "en_tant_que": "Administrateur",
+        "fonctionnalite": "Gérer les utilisateurs"
+    },
+    {
+        "en_tant_que": "Utilisateur",
+        "fonctionnalite": "Créer une session de planning poker"
+    },
+    {
+        "en_tant_que": "Administrateur",
+        "fonctionnalite": "Configurer les paramètres de session",
+        "objectif": "Personnaliser les options de session pour répondre aux besoins spécifiques de l'équipe"
+    },
+    {
+        "en_tant_que": "Utilisateur",
+        "fonctionnalite": "Voter pour une estimation"
+    },
+    {
+        "en_tant_que": "Administrateur",
+        "fonctionnalite": "Visualiser les résultats"
+    },
+    {
+        "en_tant_que": "Utilisateur",
+        "fonctionnalite": "Consulter l'historique des sessions"
+    }
+]
