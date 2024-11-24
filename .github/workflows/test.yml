@@ -13,15 +13,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
+    - name: Récupération du repository
       uses: actions/checkout@v4
 
-    - name: Set up Python
+    - name: Installation Python
       uses: actions/setup-python@v4
       with:
         python-version: 3.12
     
-    - name: Install dependencies
+    - name: Installation des packages
       run: |
         python -m venv venv
         source venv/bin/activate
@@ -31,10 +31,7 @@ jobs:
     - name: Set PYTHONPATH
       run: echo "PYTHONPATH=$(pwd)/server" >> $GITHUB_ENV
     
-    - name: List files
-      run: ls -R
-    
-    - name: Run tests
+    - name: Lancement des tests
       run: |
         source venv/bin/activate
         pytest ./server/tests/
