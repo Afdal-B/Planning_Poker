@@ -36,10 +36,12 @@ jobs:
           cd client
           npm test
       - name: Commit and push documentation
+        env:
+          GITHUB_TOKEN: ${{ secrets.P_A_T }} 
         run: |
           cd client
           git config --local user.email "afdalbouraima2@gmail.com"
           git config --local user.name "Bouraima"
           git add docs/
           git commit -m "Mise à jour de la documentation"
-          git push https://x-access-token:${secrets.P_A_T}@github.com/Afdal-B/Planning_Poker.git HEAD:main      
+          git push https://x-access-token:${GITHUB_TOKEN}@github.com/Afdal-B/Planning_Poker.git HEAD:main      
