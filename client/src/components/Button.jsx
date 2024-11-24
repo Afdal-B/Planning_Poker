@@ -1,5 +1,12 @@
 import React from "react";
-
+/**
+ * Composant Button qui affiche un bouton avec un texte donné.
+ *
+ * @component
+ * @param {Object} props - Les propriétés du composant.
+ * @param {string} props.text - Le texte à afficher sur le bouton.
+ * @returns {JSX.Element} Le composant Button.
+ */
 const Button = ({ text }) => {
   return (
     <div>

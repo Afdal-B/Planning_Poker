@@ -1,5 +1,13 @@
 import React from "react";
 
+/**
+ * Composant Footer qui affiche le pied de page de l'application.
+ *
+ * Ce composant contient un formulaire d'inscription à la newsletter,
+ * un sélecteur de langue et des informations de copyright.
+ *
+ * @returns {JSX.Element} Le composant Footer.
+ */
 const Footer = () => {
   return (
     <footer className="flex-grow bg-neutral-100 text-center p-[22px]">

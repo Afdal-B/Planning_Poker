@@ -1,5 +1,13 @@
 import React from "react";
 import logo from "../assets/icone.png";
+
+/**
+ * Composant Header qui affiche le logo et le titre de l'application.
+ *
+ * Ce composant contient une image de logo et un titre "Planning Poker".
+ *
+ * @returns {JSX.Element} Le composant Header.
+ */
 const Header = () => {
   return (
     <div className="flex flex-row bg-neutral-100 items-center">

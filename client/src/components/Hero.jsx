@@ -1,6 +1,15 @@
 import React from "react";
 import Button from "./Button";
 import Background from "./Background";
+
+/**
+ * Composant Hero qui affiche la section principale de l'application.
+ *
+ * Ce composant contient un titre, une description et deux boutons
+ * permettant à l'utilisateur de créer ou de rejoindre une salle.
+ *
+ * @returns {JSX.Element} Le composant Hero.
+ */
 const Hero = () => {
   return (
     <div className="flex flex-col items-center pt-28 pb-28 bg-[#F8F9FAFF] h-[450px]">
