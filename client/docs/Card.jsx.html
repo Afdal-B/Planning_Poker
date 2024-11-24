@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: Card.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,36 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: Card.jsx</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
 
+/**
+ * Composant Card qui affiche un nombre à l'intérieur d'une carte stylisée.
+ *
+ * @param {Object} props - Les propriétés du composant.
+ * @param {number} props.number - Le nombre à afficher sur la carte.
+ * @returns {JSX.Element} Le composant Card.
+ */
+const Card = ({ number }) => {
+  return (
+    &lt;div className="flex items-center justify-center w-[40px] h-[60px] bg-gray-100 rounded-lg shadow-lg">
+      &lt;h1 className="text-md font-bold text-gray-800">{number}&lt;/h1>
+    &lt;/div>
+  );
+};
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+export default Card;
+</code></pre>
+        </article>
+    </section>
 
 
 

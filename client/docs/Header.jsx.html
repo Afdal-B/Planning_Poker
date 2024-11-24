@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: Header.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,44 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: Header.jsx</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
+import logo from "../assets/icone.png";
 
+/**
+ * Composant Header qui affiche le logo et le titre de l'application.
+ *
+ * Ce composant contient une image de logo et un titre "Planning Poker".
+ *
+ * @returns {JSX.Element} Le composant Header.
+ */
+const Header = () => {
+  return (
+    &lt;div className="flex flex-row bg-neutral-100 items-center">
+      &lt;img
+        className="mt-[7px] ml-[20px] w-[40px] h-[40px]"
+        src={logo}
+        alt="logo"
+      />
+      &lt;h5 className="mt-[7px] ml-[10px] font-archivo font-bold">
+        Planning Poker
+      &lt;/h5>
+    &lt;/div>
+  );
+};
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+export default Header;
+</code></pre>
+        </article>
+    </section>
 
 
 
