@@ -13,8 +13,7 @@
     },
     {
         "en_tant_que": "Administrateur",
-        "fonctionnalite": "Configurer les paramètres de session",
-        "objectif": "Personnaliser les options de session pour répondre aux besoins spécifiques de l'équipe"
+        "fonctionnalite": "Configurer les paramètres de session"
     },
     {
         "en_tant_que": "Utilisateur",
