@@ -42,5 +42,4 @@ jobs:
           git config --local user.name "Bouraima"
           git add docs/
           git commit -m "Mise à jour de la documentation"
-          git push origin main
-      
+          git push https://x-access-token:${secrets.P_A_T}@github.com/Afdal-B/Planning_Poker.git HEAD:main      
