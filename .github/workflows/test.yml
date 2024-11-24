@@ -14,13 +14,13 @@ jobs:
 
     steps:
     - name: Check out repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: 3.12
-
+    
     - name: Install dependencies
       run: |
         python -m venv venv
@@ -30,9 +30,6 @@ jobs:
     
     - name: Set PYTHONPATH
       run: echo "PYTHONPATH=$(pwd)/server" >> $GITHUB_ENV
-
-    - name: Checkout repository
-      uses: actions/checkout@v4
     
     - name: List files
       run: ls -R
