@@ -22,17 +22,17 @@ jobs:
 
    
       - name: Install dependencies
-        run: cd client
-        run: npm install
+        run: |
+          cd client
+          npm install
 
-   
       - name: Generate documentation
-        run: cd client
-        run: npm run docs
+        run: |
+          cd client
+          npm run docs
 
- 
       - name: Run tests
-        run: cd client
-        run: npm test
-
+        run: |
+          cd client
+          npm test
       
