@@ -35,8 +35,12 @@ jobs:
         run: |
           cd client
           npm test
-      - name: create a test file
+      - name: Commit and push documentation
         run: |
           cd client
-          touch fichierTest.txt
+          git config --local user.email "afdalbouraima2@gmail.com"
+          git config --local user.name "Bouraima"
+          git add docs/
+          git commit -m "Mise à jour de la documentation"
+          git push origin main
       
