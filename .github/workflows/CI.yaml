@@ -35,4 +35,8 @@ jobs:
         run: |
           cd client
           npm test
+      - name: create a test file
+        run: |
+          cd client
+          touch fichierTest.txt
       
