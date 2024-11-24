@@ -6,7 +6,7 @@ def backlog_json_to_df(backlog_json) -> pd.DataFrame:
     avant insertion en base de données.
     
     :param backlog_json: Chemin du fichier backlog au format JSON.
-    :returns: Un DataFrame contenant les données si le fichier est bien structuré, sinon un DataFrame vide.
+    :returns DataFrame: Un DataFrame contenant les données si le fichier est bien structuré, sinon un DataFrame vide.
     """
     # Vérification de l'extension du fichier avant de le charger
     if not backlog_json.lower().endswith('.json'):
