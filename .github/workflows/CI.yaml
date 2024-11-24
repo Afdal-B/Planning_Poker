@@ -3,39 +3,33 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - dev # Déclencher l'action pour les push sur la branche dev
-      - main # Déclencher l'action pour les push sur la branche principale
+      - main 
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # Étape 1 : Vérifier le code source
+   
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Étape 2 : Installer Node.js (si nécessaire)
+    
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "16" # Assurez-vous que la version correspond à votre projet
+          node-version: "16" 
 
-      # Étape 3 : Installer les dépendances
+   
       - name: Install dependencies
         run: npm install
 
-      # Étape 4 : Générer la documentation
+   
       - name: Generate documentation
         run: npm run docs
-        if: github.ref == 'refs/heads/dev' # Exécuter uniquement sur la branche dev
 
-      # Étape 5 : Exécuter les tests
+ 
       - name: Run tests
         run: npm test
-        if: github.ref == 'refs/heads/dev' # Exécuter uniquement sur la branche dev
 
-      # Étape 6 : Déployer sur Vercel
-      - name: Deploy to Vercel
-        run: npx vercel --prod --token=$VERCEL_TOKEN
-        if: github.ref == 'refs/heads/main' # Déployer uniquement sur la branche main
+      
