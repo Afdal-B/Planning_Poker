@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import FormButton from "../components/FormButton";
 import { useState } from "react";
 const CreateRoomPage = () => {
   const [roomName, setRoomName] = useState("");
@@ -24,7 +25,7 @@ const CreateRoomPage = () => {
       <Header></Header>
       <div className="flex items-center justify-center min-h-[80vh] bg-[#F8F9FAFF]">
         <form className="p-6 rounded-lg shadow-lg w-96" onSubmit={handleSubmit}>
-          <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
+          <h1 className="text-2xl font-bold text-gray-800 text-center mb-6 font-archivo">
             Create Room
           </h1>
 
@@ -101,12 +102,7 @@ const CreateRoomPage = () => {
           </div>
 
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-[#378C9FFF] text-white py-2 px-4 rounded-lg hover:bg-[#1b5764] focus:ring-2 focus:ring-[#a7d3dd] focus:ring-offset-1"
-          >
-            Create
-          </button>
+          <FormButton text={"Create"}></FormButton>
         </form>
       </div>
       <Footer></Footer>
