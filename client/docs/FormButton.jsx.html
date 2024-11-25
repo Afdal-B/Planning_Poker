@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: FormButton.jsx</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,32 +17,40 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: FormButton.jsx</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React from "react";
 
+/**
+ * Composant FormButton qui affiche un bouton de soumission avec un texte donné.
+ *
+ * @component
+ * @param {Object} props - Les propriétés du composant.
+ * @param {string} props.text - Le texte à afficher sur le bouton.
+ * @returns {JSX.Element} Le composant FormButton.
+ */
+const FormButton = ({ text }) => {
+  return (
+    &lt;button
+      type="submit"
+      className="w-full bg-[#378C9FFF] text-white py-2 px-4 rounded-lg hover:bg-[#1b5764] focus:ring-2 focus:ring-[#a7d3dd] focus:ring-offset-1"
+    >
+      {text}
+    &lt;/button>
+  );
+};
 
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
+export default FormButton;
+</code></pre>
+        </article>
+    </section>
 
 
 
