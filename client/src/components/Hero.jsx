@@ -12,7 +12,7 @@ import Background from "./Background";
  */
 const Hero = () => {
   return (
-    <div className="flex flex-col items-center pt-28 pb-28 bg-[#F8F9FAFF] h-[450px]">
+    <div className="flex flex-col items-center pt-28 pb-28 bg-[#F8F9FAFF] h-[80vh]">
       <h2 className="font-archivo font-bold text-3xl mb-3 z-10">
         Collaborate and streamline
       </h2>

@@ -3,11 +3,13 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FormButton from "../components/FormButton";
 import { useState } from "react";
+import axios from "axios";
 const CreateRoomPage = () => {
   const [roomName, setRoomName] = useState("");
   const [gameRule, setGameRule] = useState("");
   const [jsonFile, setJsonFile] = useState(null);
-
+  const [pseudo, setPseudo] = useState("");
+  const [avatar, setAvatar] = useState("");
   const handleFileChange = (event) => {
     setJsonFile(event.target.files[0]);
   };
@@ -15,10 +17,20 @@ const CreateRoomPage = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log({
-      roomName,
-      gameRule,
-      jsonFile,
+      room_name: roomName,
+      game_rule: gameRule,
+      backlog_json: jsonFile,
+      username_creator: pseudo,
+      avatar_creator: avatar,
     });
+    const data = JSON.stringify({
+      room_name: roomName,
+      game_rule: gameRule,
+      backlog_json: jsonFile,
+      username_creator: pseudo,
+      avatar_creator: avatar,
+    });
+    axios.post("http://127.0.0.1:5000/create_room", data);
   };
   return (
     <div>
@@ -39,6 +51,32 @@ const CreateRoomPage = () => {
               value={roomName}
               onChange={(e) => setRoomName(e.target.value)}
               placeholder="Planning poker project"
+              className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Enter your pseudo
+            </label>
+            <input
+              type="text"
+              value={pseudo}
+              onChange={(e) => setPseudo(e.target.value)}
+              placeholder="pseudo"
+              className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Avatar
+            </label>
+            <input
+              type="text"
+              value={avatar}
+              onChange={(e) => setAvatar(e.target.value)}
+              placeholder="avatar"
               className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
