@@ -1,11 +1,12 @@
 from flask import Flask, request
 app = Flask(__name__)
 
-@app.route('/')
-def create_user():
+@app.route('/create_room', methods = ['GET', 'POST'])
+def create_room():
     """
     Cette route permet de 
     """
+    print(request.get_json())
     #room_data = request.get_json()
     #room_name = room_data.get('room_name')
     #username_creator = room_data.get('username_creator')
