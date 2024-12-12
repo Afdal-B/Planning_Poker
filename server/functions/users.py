@@ -1,3 +1,7 @@
+"""
+Ce module regroupe l'ensemble des fonctions permettant d'intéragir les utilisateurs jouant une partie de Planning Pocker.
+"""
+
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient
 import sys

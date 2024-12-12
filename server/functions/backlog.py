@@ -1,3 +1,7 @@
+"""
+Ce module regroupe l'ensemble des fonctions permettant d'intéragir avec le backlog.
+"""
+
 import pandas as pd
 from bson import ObjectId
 import json

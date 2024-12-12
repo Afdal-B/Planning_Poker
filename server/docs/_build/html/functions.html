@@ -1,0 +1,246 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>functions package &mdash; Documentation Documentation Planning Pocker (Back-end) 1.0</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=7a28dfa3"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/translations.js?v=e6b791cb"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Recherche" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Documentation Planning Pocker (Back-end)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">functions</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Documentation Planning Pocker (Back-end)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">functions package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/functions.rst.txt" rel="nofollow"> Afficher la source de la page</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="functions-package">
+<h1>functions package<a class="headerlink" href="#functions-package" title="Lien vers cette rubrique"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Lien vers cette rubrique"></a></h2>
+</section>
+<section id="module-functions.backlog">
+<span id="functions-backlog-module"></span><h2>functions.backlog module<a class="headerlink" href="#module-functions.backlog" title="Lien vers cette rubrique"></a></h2>
+<p>Ce module regroupe l’ensemble des fonctions permettant d’intéragir avec le backlog.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="functions.backlog.backlog_json_to_df">
+<span class="sig-prename descclassname"><span class="pre">functions.backlog.</span></span><span class="sig-name descname"><span class="pre">backlog_json_to_df</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backlog_json</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">DataFrame</span></span></span><a class="reference internal" href="_modules/functions/backlog.html#backlog_json_to_df"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#functions.backlog.backlog_json_to_df" title="Lien vers cette définition"></a></dt>
+<dd><p>Cette fonction vérifie la structure d’un backlog importé au format JSON et le convertit en DataFrame
+avant insertion en base de données.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>backlog_json</strong> – Chemin du fichier backlog au format JSON.</p>
+</dd>
+<dt class="field-even">Returns DataFrame<span class="colon">:</span></dt>
+<dd class="field-even"><p>Un DataFrame contenant les données si le fichier est bien structuré, sinon un DataFrame vide.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="functions.backlog.export_backlog_to_json">
+<span class="sig-prename descclassname"><span class="pre">functions.backlog.</span></span><span class="sig-name descname"><span class="pre">export_backlog_to_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/functions/backlog.html#export_backlog_to_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#functions.backlog.export_backlog_to_json" title="Lien vers cette définition"></a></dt>
+<dd><p>Exporte les colonnes « en_tant_que », « fonctionnalite », « objectif » et « estimation »
+pour un room_code donné dans un fichier JSON.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="functions.backlog.upload_backlog">
+<span class="sig-prename descclassname"><span class="pre">functions.backlog.</span></span><span class="sig-name descname"><span class="pre">upload_backlog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">backlog_df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="_modules/functions/backlog.html#upload_backlog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#functions.backlog.upload_backlog" title="Lien vers cette définition"></a></dt>
+<dd><p>Cette fonction permet d’uploader un backlog importé au format JSON et et insère chaque tâche dans la base de données MongoDB.
+Le backlog doit contenir 3 champs par tâche : « En tant que », « Fonctionnalité » et « Objectif ».</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>backlog</strong> – DataFrame contenant le backlog à uploader.</p></li>
+<li><p><strong>room_code</strong> – Code la room dans laquelle le backlog est chargé</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return task_ids<span class="colon">:</span></dt>
+<dd class="field-even"><p>renvoie la liste des id des tâches chargées depuis le backlog</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="functions-database-module">
+<h2>functions.database module<a class="headerlink" href="#functions-database-module" title="Lien vers cette rubrique"></a></h2>
+</section>
+<section id="module-functions.messages">
+<span id="functions-messages-module"></span><h2>functions.messages module<a class="headerlink" href="#module-functions.messages" title="Lien vers cette rubrique"></a></h2>
+</section>
+<section id="functions-rooms-module">
+<h2>functions.rooms module<a class="headerlink" href="#functions-rooms-module" title="Lien vers cette rubrique"></a></h2>
+</section>
+<section id="module-functions.rounds">
+<span id="functions-rounds-module"></span><h2>functions.rounds module<a class="headerlink" href="#module-functions.rounds" title="Lien vers cette rubrique"></a></h2>
+<p>Ce module regroupe l’ensemble des fonctions permettant d’intéragir avec les rounds d’une partie de Planning Pocker.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="functions.rounds.create_round">
+<span class="sig-prename descclassname"><span class="pre">functions.rounds.</span></span><span class="sig-name descname"><span class="pre">create_round</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">task_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/functions/rounds.html#create_round"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#functions.rounds.create_round" title="Lien vers cette définition"></a></dt>
+<dd><p>Cette fonction permet de créer un round en base de données pour une tâche d’une room, et de lui attribué un temps imparti.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>task_id</strong> – id de la tâche à laquelle les utilisateurs doivent voter.</p></li>
+<li><p><strong>room_id</strong> – id de la room dans laquelle les utilisateurs doivent voter.</p></li>
+<li><p><strong>timer</strong> – temps imparti pour ce round.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="functions.rounds.get_votes_for_task_in_round">
+<span class="sig-prename descclassname"><span class="pre">functions.rounds.</span></span><span class="sig-name descname"><span class="pre">get_votes_for_task_in_round</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">round_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/functions/rounds.html#get_votes_for_task_in_round"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#functions.rounds.get_votes_for_task_in_round" title="Lien vers cette définition"></a></dt>
+<dd><p>Récupère l’ensemble des votes pour une tâche spécifique dans un round.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>round_id</strong> – L’ID du round pour lequel récupérer les votes.</p>
+</dd>
+<dt class="field-even">Renvoie<span class="colon">:</span></dt>
+<dd class="field-even"><p>Un dictionnaire contenant la liste des votes par utilisateur ou un message d’erreur.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="functions.rounds.partie_stricte">
+<span class="sig-prename descclassname"><span class="pre">functions.rounds.</span></span><span class="sig-name descname"><span class="pre">partie_stricte</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">round_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/functions/rounds.html#partie_stricte"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#functions.rounds.partie_stricte" title="Lien vers cette définition"></a></dt>
+<dd><p>Cette fonction permet de valider ou non un round joué en partie strict</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>round_id</strong> – l’identifiant du round</p>
+</dd>
+</dl>
+<p>:return : Vrai si la partie est validé, faux sinon.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="functions.rounds.vote_for_task_in_round">
+<span class="sig-prename descclassname"><span class="pre">functions.rounds.</span></span><span class="sig-name descname"><span class="pre">vote_for_task_in_round</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">round_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vote_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/functions/rounds.html#vote_for_task_in_round"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#functions.rounds.vote_for_task_in_round" title="Lien vers cette définition"></a></dt>
+<dd><p>Cette fonction permet à un utilisateur de voter pour une tâche dans un round spécifique.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>round_id</strong> – L’ID du round dans lequel l’utilisateur vote.</p></li>
+<li><p><strong>user_id</strong> – L’ID de l’utilisateur qui vote.</p></li>
+<li><p><strong>vote_value</strong> – La valeur du vote</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return message dict<span class="colon">:</span></dt>
+<dd class="field-even"><p>Un message de succès ou une erreur.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-functions.users">
+<span id="functions-users-module"></span><h2>functions.users module<a class="headerlink" href="#module-functions.users" title="Lien vers cette rubrique"></a></h2>
+<p>Ce module regroupe l’ensemble des fonctions permettant d’intéragir les utilisateurs jouant une partie de Planning Pocker.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="functions.users.create_user">
+<span class="sig-prename descclassname"><span class="pre">functions.users.</span></span><span class="sig-name descname"><span class="pre">create_user</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avatar</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/functions/users.html#create_user"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#functions.users.create_user" title="Lien vers cette définition"></a></dt>
+<dd><p>Cette fonction permet de créer un utilisateur lorsqu’il souhaite rejoindre une room</p>
+<dl class="field-list simple">
+<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>username</strong> – nom d’utilisateur</p></li>
+<li><p><strong>avatar</strong> – lien vers l’image de l’avatar choisi</p></li>
+<li><p><strong>room_code</strong> – code de la room à rejoindre</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-functions">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-functions" title="Lien vers cette rubrique"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur 2024, Afdal BOURAIMA, Yousra BOUHANNA, Elias AIT HASSOU.</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
