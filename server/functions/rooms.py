@@ -67,7 +67,7 @@ def get_users_in_room(room_code: str) -> dict:
         return {"error": "Room non trouvée"}
     
     # Recherche des utilisateurs ayant rejoint cette salle
-    users = users_collection.find({"room_id": room["room_code"]}, {"username": 1, "avatar": 1})
+    users = users_collection.find({"room_code": room["room_code"]}, {"username": 1, "avatar": 1})
     
     # Conversion des résultats en liste
     user_list = list(users)
@@ -76,7 +76,7 @@ def get_users_in_room(room_code: str) -> dict:
         return {"error": "Aucun utilisateur trouvé dans cette salle"}
     
     # Formatage de la réponse
-    return {"users": user_list}
+    return user_list
 
 def verify_exist_room_code(room_code)->bool:
     """
