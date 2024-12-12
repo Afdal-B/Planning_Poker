@@ -5,7 +5,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from datetime import datetime
 from rooms import verify_exist_room_code, generate_room_code
-from backlog import backlog_json_to_df
+from backlog import backlog_json_to_df, export_backlog_to_json
 
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']

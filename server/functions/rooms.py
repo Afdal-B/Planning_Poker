@@ -1,3 +1,6 @@
+"""
+Ce module regroupe l'ensemble des fonctions permettant d'intéragir avec les salons de jeu "rooms".
+"""
 import string, random
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient
@@ -13,10 +16,20 @@ users_collection = db['users']
 messages_collection = db['messages']
 
 def create_room(room_name,game_rule,backlog_json,username_creator, avatar_creator)->str:
+    """
+    Cette fonction permet de créer une room en base de données.
+
+    :param room_name: Le nom de la room.
+    :param game_rule: La règle de jeu choisie pour cette partie.
+    :param backlog_json: Le fichier du backlog au format json.
+    :param username_creator: Le nom d'utilisateur du créateur de la room.
+    :param avatar_creator: L'avatar du créateur de la room.
+    :return: Le room code généré après insertion en base de données.
+
+    """
+    # Import à ce niveau afin d'éviter une boucle entre les 2 modules
     from users import create_user
-    """
-    Cette fonction permet de créer une room en base de données
-    """
+
     # Vérification et chargement du backlog json dans une DataFrame
     backlog = backlog_json_to_df(backlog_json)
 
