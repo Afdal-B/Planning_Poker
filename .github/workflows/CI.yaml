@@ -1,46 +1,49 @@
 name: CI/CD Pipeline
 
-on:
+#Ce pipeline CI/CD éxecute plusieurs étapes pour vérifier que le code fonctionne correctement, générer la documentation et la publier sur GitHub Pages
+#Il est déclenché à chaque fois qu'un changement est poussé sur la branche principale
+
+on: #Définie l'événement qui déclenche le workflow, qui est un push sur la branche main
   push:
     branches:
-      - main
+      - main 
 
-permissions:
+permissions: #Attribue les permissions nécessaires pour que le workflow puisse écrire dans le dépôt
   contents: write
-
-jobs:
+ 
+jobs:  #Définit les jobs qui sont les tâches à exécuter dans le workflow
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest #Spécifie le runner sur lequel le job s'exécute
 
-    steps:
-   
-      - name: Checkout code
+    steps: #Définit les étapes qui sont une série d'actions exécutées dans le cadre d'un job
+      
+      - name: Checkout code #Clone le dépôt Git dans la machine virtuelle (runner)
         uses: actions/checkout@v3
 
     
-      - name: Setup Node.js
+      - name: Setup Node.js #Configure l'environnement Node.js dans le runner
         uses: actions/setup-node@v3
         with:
           node-version: "21.5.0"
 
    
-      - name: Install dependencies
+      - name: Install dependencies #Installe les dépendances du projet définies dans le fichier package.json
         run: |
           cd client
           npm install
 
-      - name: Generate documentation
+      - name: Generate documentation #Génére la documentation du projet
         run: |
           cd client
           npm run docs
 
-      - name: Run tests
+      - name: Run tests #Exécute les tests automatisés définis pour le projet
         run: |
           cd client
           npm test
-      - name: Commit and push documentation
+      - name: Commit and push documentation #Commit et pousse la documentation générée vers le dépôt Git
         env:
-          GITHUB_TOKEN: ${{ secrets.P_A_T }} 
+          GITHUB_TOKEN: ${{ secrets.P_A_T }}  #Définit la variable d'environnement GITHUB_TOKEN qui est un jeton d'accès personnel stocké dans les secrets du dépôt
         run: |
           cd client
           git config --local user.email "afdalbouraima2@gmail.com"

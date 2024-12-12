@@ -1,37 +1,40 @@
 name: Run Tests
 
-on:
-  push:
-    branches:
+#Ce workflow exécute des tests automatisés pour vérifier que le code fonctionne correctement.
+#Il est déclenché à chaque fois qu'un changement est poussé sur la branche principale ou qu'une pull request est ouverte.
+
+on: #Définition des événements qui déclenchent ce workflow
+  push: #Ce workflow s'exécute à chaque push sur la branche main 
+    branches: 
       - main
-  pull_request:
+  pull_request: #Ou à chaque ouverture d'une pull request
     branches:
       - main
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest #Spécification du runner sur lequel le job s'exécute
 
     steps:
     - name: Récupération du repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v4 #Utilise une action GitHub pour cloner le dépôt dans l'environnement de travail (runner)
 
     - name: Installation Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v4 #Installe Python dans l'environnement
       with:
         python-version: 3.12
     
-    - name: Installation des packages
-      run: |
-        python -m venv venv
-        source venv/bin/activate
+    - name: Installation des packages 
+      run: | #Crée un environnement virtuel et installe les dépendances du projet définies dans le fichier requirements.txt
+        python -m venv venv    
+        source venv/bin/activate 
         pip install --upgrade pip
         pip install -r requirements.txt
     
     - name: Set PYTHONPATH
-      run: echo "PYTHONPATH=$(pwd)/server" >> $GITHUB_ENV
+      run: echo "PYTHONPATH=$(pwd)/server" >> $GITHUB_ENV ##Définit une variable d'environnement PYTHONPATH pour inclure le répertoire 'server'
     
     - name: Lancement des tests
-      run: |
-        source venv/bin/activate
+      run: | #Active l'enironnement virtuel et lance les tests 
+        source venv/bin/activate 
         pytest ./server/tests/
