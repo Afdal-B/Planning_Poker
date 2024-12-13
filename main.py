@@ -2,14 +2,20 @@ from flask import Flask, request
 from flask_cors import CORS, cross_origin
 app = Flask(__name__)
 
-CORS(app, resources={r"/": {"origins": "*"}})
+
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000",
+                                 "allow_headers": ["Origin", "Authorization", "X-Frame-Options", "X-Requested-With", "DNT", "User-Agent", "If-Modified-Since", "Cache-Control", "Range", "X-Real-IP", "HOST", "X-NginX-Proxy", "Content-Type", "If-Match"],
+                                 "expose_headers": ["ETag", "Content-Length", "Content-Range", "Access-Control-Allow-Origin"],
+                                 "max_age": "3600"}})
 
 @app.route('/create_room', methods = ['GET', 'POST'])
 def create_room():
     """
     Cette route permet de 
     """
-    print(request.get_json())
+    data = request.get_json()
+    print(type(data['backlog_json']))
+    print(data)
     #room_data = request.get_json()
     #room_name = room_data.get('room_name')
     #username_creator = room_data.get('username_creator')

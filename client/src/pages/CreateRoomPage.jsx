@@ -4,6 +4,7 @@ import Footer from "../components/Footer";
 import FormButton from "../components/FormButton";
 import { useState } from "react";
 import axios from "axios";
+import { API_URL } from "../constants/constants";
 const CreateRoomPage = () => {
   const [roomName, setRoomName] = useState("");
   const [gameRule, setGameRule] = useState("");
@@ -16,21 +17,23 @@ const CreateRoomPage = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log({
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    const data = new FormData();
+    /*const data = JSON.stringify({
       room_name: roomName,
       game_rule: gameRule,
       backlog_json: jsonFile,
       username_creator: pseudo,
       avatar_creator: avatar,
-    });
-    const data = JSON.stringify({
-      room_name: roomName,
-      game_rule: gameRule,
-      backlog_json: jsonFile,
-      username_creator: pseudo,
-      avatar_creator: avatar,
-    });
-    axios.post("http://127.0.0.1:5000/create_room", data);
+    });*/
+    //console.log(data);
+    data.append("backlog_json", jsonFile);
+    console.log(data);
+    axios.post(API_URL + "/create_room", data);
   };
   return (
     <div>
