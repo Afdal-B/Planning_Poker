@@ -1,6 +1,8 @@
 """
 Ce module regroupe l'ensemble des fonctions permettant d'intéragir avec les salons de jeu "rooms".
 """
+import sys
+sys.path.append('/server/functions')
 import string, random
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient

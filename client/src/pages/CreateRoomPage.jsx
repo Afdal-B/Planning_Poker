@@ -12,28 +12,39 @@ const CreateRoomPage = () => {
   const [pseudo, setPseudo] = useState("");
   const [avatar, setAvatar] = useState("");
   const handleFileChange = (event) => {
-    setJsonFile(event.target.files[0]);
+    const file = event.target.files[0];
+    const reader = new FileReader();
+    if (file && file.type === "application/json") {
+      reader.onload = (e) => {
+        if (file && file.type === "application/json") {
+          try {
+            setJsonFile(e.target.result);
+          } catch (error) {
+            console.error("invalid json");
+          }
+        }
+      };
+      reader.readAsText(file);
+    }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const config = {
       headers: {
-        "Content-Type": "multipart/form-data",
+        "Content-Type": "application/json",
       },
     };
-    const data = new FormData();
-    /*const data = JSON.stringify({
+
+    const data = JSON.stringify({
       room_name: roomName,
       game_rule: gameRule,
       backlog_json: jsonFile,
       username_creator: pseudo,
       avatar_creator: avatar,
-    });*/
-    //console.log(data);
-    data.append("backlog_json", jsonFile);
+    });
     console.log(data);
-    axios.post(API_URL + "/create_room", data);
+    axios.post(API_URL + "/create_room", data, config);
   };
   return (
     <div>
