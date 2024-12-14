@@ -1,11 +1,19 @@
+import os 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
 from server.functions.rooms import create_room
 from server.functions.users import create_user
 from server.functions.backlog import export_backlog_to_json
-app = Flask(__name__)
+from flask_socketio import SocketIO, emit, join_room
+from server.functions.chat import send_message, add_reaction, fetch_chat_history
 
+# Initialisation de l'application Flask 
+app = Flask(__name__)
+#Récupération de la clé secrète
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+#Initialisation de l'objet SocketIO
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 CORS(app)
 
@@ -85,5 +93,52 @@ def export_backlog_route():
 
     return 'Hello, World!'
 
+# Route HTTP pour récupérer l'historique des messages d'une room
+@app.route('/chat/history/<room_id>', methods=['GET'])
+def get_chat_history(room_id):
+    """
+    Route pour récupérer l'historique des messages d'une room.
+    """
+    response, status = fetch_chat_history(room_id)
+    return jsonify(response), status
+
+# Événement WebSocket pour rejoindre une room et intégrer le chat
+@socketio.on('join')
+def handle_join(data):
+    """
+    Un utilisateur rejoint une room et est automatiquement ajouté au chat.
+    """
+    room_id = data.get('room_id')
+    user_id = data.get('user_id')
+
+    if not room_id or not user_id:
+        return {"error": "room_id and user_id are required"}, 400
+
+    join_room(room_id)
+    print(f"User {user_id} joined room: {room_id}")
+
+# Événement WebSocket pour envoyer un message
+@socketio.on('send_message')
+def handle_send_message(data):
+    """
+    Gestion de l'envoi d'un message dans une room.
+    """
+    response, status = send_message(data)
+    if status == 200:
+        emit("new_message", data, room=data.get("room_id"))
+    return response, status
+
+# Événement WebSocket pour ajouter une réaction
+@socketio.on('add_reaction')
+def handle_add_reaction(data):
+    """
+    Gestion de l'ajout de réactions aux messages.
+    """
+    response, status = add_reaction(data)
+    if status == 200:
+        emit("reaction_added", data, room=data.get("room_id"))
+    return response, status
+
+# Lancer l'application
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)
