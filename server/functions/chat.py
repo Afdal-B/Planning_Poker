@@ -102,6 +102,7 @@ def add_reaction(data):
     }, broadcast=True)
 
     return {"message": "Reaction added successfully"}, 200
+
 #Définition de la fonction de la récupération des messages
 def fetch_chat_history(room_id):
     """
