@@ -21,9 +21,6 @@ def backlog_json_to_df(backlog_json) -> pd.DataFrame:
     :returns DataFrame: Un DataFrame contenant les données si le fichier est bien structuré, sinon un DataFrame vide.
     """
     # Vérification de l'extension du fichier avant de le charger
-    if not backlog_json.lower().endswith('.json'):
-        print("Erreur : Le fichier importé n'est pas un fichier JSON.")
-        return pd.DataFrame()
     
     try:
         # Tentative de chargement du fichier JSON
