@@ -1,5 +1,14 @@
-from flask import Flask, request
+import os 
+from flask import Flask, request, jsonify
+from flask_socketio import SocketIO, emit, join_room
+from server.functions.chat import send_message, add_reaction, fetch_chat_history
+
+# Initialisation de l'application Flask et de SocketIO
 app = Flask(__name__)
+#Récupération de la clé secrète
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+#Initialisation de l'objet SocketIO
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 @app.route('/')
 def create_user():
@@ -16,6 +25,3 @@ def create_user():
 
     return 'Hello, World!'
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
