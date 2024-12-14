@@ -6,7 +6,7 @@ sys.path.append('/server/functions')
 import string, random
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient
-from backlog import backlog_json_to_df, upload_backlog
+from server.functions.backlog import backlog_json_to_df, upload_backlog
 
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']
@@ -30,7 +30,7 @@ def create_room(room_name,game_rule,backlog_json,username_creator, avatar_creato
 
     """
     # Import à ce niveau afin d'éviter une boucle entre les 2 modules
-    from users import create_user
+    from server.functions.users import create_user
 
     # Vérification et chargement du backlog json dans une DataFrame
     backlog = backlog_json_to_df(backlog_json)
