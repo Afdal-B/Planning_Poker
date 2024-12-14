@@ -17,7 +17,7 @@ rounds_collection = db['rounds']
 users_collection = db['users']
 messages_collection = db['messages']
 
-def create_room(room_name,game_rule,backlog_json,username_creator, avatar_creator)->str:
+def create_room(room_name, game_rule, backlog_json, username_creator, avatar_creator) -> dict:
     """
     Cette fonction permet de créer une room en base de données.
 
@@ -26,47 +26,55 @@ def create_room(room_name,game_rule,backlog_json,username_creator, avatar_creato
     :param backlog_json: Le fichier du backlog au format json.
     :param username_creator: Le nom d'utilisateur du créateur de la room.
     :param avatar_creator: L'avatar du créateur de la room.
-    :return: Le room code généré après insertion en base de données.
-
+    :return: Un dictionnaire contenant le room_code et le user_id du créateur, ou un message d'erreur.
     """
-    # Import à ce niveau afin d'éviter une boucle entre les 2 modules
+    # import à ce niveau pour éviter une boucle entre les boucles entre les modules
     from server.functions.users import create_user
 
-    # Vérification et chargement du backlog json dans une DataFrame
-    backlog = backlog_json_to_df(backlog_json)
+    try:
+        # Vérification et chargement du backlog json dans une DataFrame
+        backlog = backlog_json_to_df(backlog_json)
 
-    if not backlog.empty:
+        if backlog.empty:
+            return {"error": "Le backlog est vide ou invalide."}
+
         # Génération du room_code
         room_code = generate_room_code()
 
         # Chargement des tâches en base de données et récupération des ids
         tasks_ids = upload_backlog(backlog, room_code)
 
+        # Création du document de la room
         room_document = {
             "_id": str(ObjectId()),
-            "room_name" : room_name,
-            "room_code": room_code, 
+            "room_name": room_name,
+            "room_code": room_code,
             "creator_user_id": None,
             "backlog": tasks_ids,
             "chat": [],
-            "current_round": None, 
+            "current_round": None,
             "game_rule": game_rule,
         }
 
-        # Insertion en base de données
-        try:
-            rooms_collection.insert_one(room_document)
-            creator_user_id = create_user(username_creator, avatar_creator, room_code)
+        # Insertion de la room dans la base de données
+        rooms_collection.insert_one(room_document)
 
-            # Mise à jour du document de la room avec l'ID du créateur
-            rooms_collection.update_one(
-                {"room_code": room_code},
-                {"$set": {"creator_user_id": creator_user_id}}
-            )
-        except Exception as e:
-            print(f"Erreur lors de l'insertion du document: {e}")
-            
-        return room_code
+        # Création de l'utilisateur (le créateur de la room)
+        creator_user_id = create_user(username_creator, avatar_creator, room_code)
+
+        # Mise à jour du document de la room avec l'ID du créateur
+        rooms_collection.update_one(
+            {"room_code": room_code},
+            {"$set": {"creator_user_id": creator_user_id}}
+        )
+
+        # Renvoie du dictionnaire avec le room code et l'user id du créateur
+        return {"room_code": room_code, "creator_user_id": creator_user_id}
+
+    except Exception as e:
+        print(f"Erreur lors de l'insertion de la room ou de l'utilisateur: {e}")
+        return {"error": f"Une erreur est survenue: {str(e)}"}
+
     
 def get_users_in_room(room_code: str) -> dict:
     """

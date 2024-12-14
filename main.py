@@ -28,10 +28,10 @@ def create_room_route():
     game_rule = data.get('game_rule')
 
     # Appel de la fonction pour l'envoi en base de données
-    room_code = create_room(room_name,game_rule,backlog,username_creator, avatar_creator)
+    data_dict = create_room(room_name,game_rule,backlog,username_creator, avatar_creator)
 
-    # Renvoie du room code au front-end
-    return jsonify({"room_code": room_code})
+    # Renvoie du room code et de l'user_id du createur au front-end
+    return jsonify(data_dict)
 
 @app.route('/join_room', methods = ['GET', 'POST'])
 def join_room_route():
@@ -47,9 +47,9 @@ def join_room_route():
     #room_code = data.get('room_code')
 
     # Appel de la fonction pour l'envoi en base de données
-    #create_user(username, avatar, room_code)
+    #user_id = create_user(username, avatar, room_code)
 
-    return 'Hello, World!'
+    #return jsonify({"user_id":user_id})
 
 @app.route('/share_room', methods = ['GET', 'POST'])
 def share_room_route():

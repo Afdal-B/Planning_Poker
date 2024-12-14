@@ -12,16 +12,18 @@ client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.8
 db = client['planning_poker']
 tasks_collection = db['tasks']
 
+import pandas as pd
+
 def backlog_json_to_df(backlog_json) -> pd.DataFrame:
     """
     Cette fonction vérifie la structure d'un backlog importé au format JSON et le convertit en DataFrame
-    avant insertion en base de données.
+    avant insertion en base de données. Elle accepte deux structures :
+    1. 3 colonnes : ["en_tant_que", "fonctionnalite", "objectif"]
+    2. 4 colonnes : ["en_tant_que", "fonctionnalite", "objectif", "estimation"] (backlog temporaire)
     
-    :param backlog_json: Chemin du fichier backlog au format JSON.
+    :param backlog_json: Le contenu du fichier JSON.
     :returns DataFrame: Un DataFrame contenant les données si le fichier est bien structuré, sinon un DataFrame vide.
     """
-    # Vérification de l'extension du fichier avant de le charger
-    
     try:
         # Tentative de chargement du fichier JSON
         backlog_df = pd.read_json(backlog_json)
@@ -31,16 +33,25 @@ def backlog_json_to_df(backlog_json) -> pd.DataFrame:
     except FileNotFoundError:
         print(f"Erreur : Le fichier JSON spécifié est introuvable : {backlog_json}")
         return pd.DataFrame()
-    
-    # Vérification de la structure du backlog
-    expected_columns = ["en_tant_que", "fonctionnalite", "objectif"]
-    missing_columns = [col for col in expected_columns if col not in backlog_df.columns]
-    if missing_columns:
-        print(f"Erreur : Les colonnes suivantes sont manquantes dans le fichier : {', '.join(missing_columns)}")
+
+    # Vérification de la structure du backlog : soit 3 colonnes, soit 4 colonnes
+    expected_columns_3 = ["en_tant_que", "fonctionnalite", "objectif"]
+    expected_columns_4 = expected_columns_3 + ["estimation"]
+
+    # Vérifier si le fichier a 3 ou 4 colonnes
+    if set(backlog_df.columns) == set(expected_columns_3):
+        # Structure avec 3 colonnes
+        print("Structure du backlog : 3 colonnes détectées.")
+    elif set(backlog_df.columns) == set(expected_columns_4):
+        # Structure avec 4 colonnes
+        print("Structure du backlog : 4 colonnes détectées.")
+    else:
+        print("Erreur : Le fichier JSON ne correspond ni à la structure à 3 ni à la structure à 4 colonnes.")
         return pd.DataFrame()
-    
-    # Retourne le DataFrame si tout est correct
+
+    # Retourne le DataFrame si la structure est valide
     return backlog_df
+
 
 def export_backlog_to_json(room_code):
     """
