@@ -38,3 +38,10 @@ jobs:
       run: | #Active l'enironnement virtuel et lance les tests 
         source venv/bin/activate 
         pytest ./server/tests/
+    
+    - name: Générer la documentation API avec sphinx-apidoc 
+      run: |
+        source venv/bin/activate
+        sphinx-apidoc -o docs ./server/functions
+        make -C docs html 
+  

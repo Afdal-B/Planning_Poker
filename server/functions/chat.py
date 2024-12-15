@@ -1,4 +1,6 @@
-# Les fonctionnalités de la messagerie 
+"""
+Ce module regroupe l'ensemble des fonctionnalités de la messagerie.
+"""
 # Importation des bibliothèques requises
 from flask import Flask, request, jsonify
 from pymongo.mongo_client import MongoClient

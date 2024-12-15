@@ -5,6 +5,7 @@ import json
 from server.functions.rooms import create_room
 from server.functions.users import create_user
 from server.functions.backlog import export_backlog_to_json
+from server.functions.rounds import vote_for_task_in_round
 from flask_socketio import SocketIO, emit, join_room
 from server.functions.chat import send_message, add_reaction, fetch_chat_history
 
@@ -47,33 +48,32 @@ def join_room_route():
     Cette route permet de rejoindre une room depuis les données du front-end à l'aide de la fonction "create_user"
     """
     # Récupération des données envoyées depuis le front-end
-    #data = request.get_json()
+    data = request.get_json()
 
     # Récupération des autres informations du formulaire
-    #username = data.get('username')
-    #avatar = data.get('avatar')
-    #room_code = data.get('room_code')
+    username = data.get('username')
+    avatar = data.get('avatar')
+    room_code = data.get('room_code')
 
     # Appel de la fonction pour l'envoi en base de données
-    #user_id = create_user(username, avatar, room_code)
+    user_id = create_user(username, avatar, room_code)
 
-    #return jsonify({"user_id":user_id})
+    return jsonify({"user_id":user_id})
 
-@app.route('/share_room', methods = ['GET', 'POST'])
-def share_room_route():
+@app.route('/<round_id>/vote', methods = ['GET', 'POST'])
+def vote_round_route(round_id):
     """
-    Cette route permet de récupérer le room code et l'afficher sur le front-end pour que le créateur de la room puisse le partager
+    Cette route permet à un utilisateur de voter dans un round.
     """
     # Récupération des données envoyées depuis le front-end
-    #data = request.get_json()
+    data = request.get_json()
 
-    # Récupération des autres informations du formulaire
-    #username = data.get('username')
-    #avatar = data.get('avatar')
-    #room_code = data.get('room_code')
+    # Récupération des autres informations
+    user_id = data.get('user_id')
+    vote_value = data.get('vote_value')
 
     # Appel de la fonction pour l'envoi en base de données
-    #create_user(username, avatar, room_code)
+    vote_for_task_in_round(round_id, user_id, vote_value)
 
     return 'Hello, World!'
 
