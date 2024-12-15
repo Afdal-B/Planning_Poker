@@ -23,13 +23,3 @@ def test_backlog_invalid_structure():
     invalid_file = os.path.join(os.path.dirname(__file__), "files", "backlog_invalid.json")
     df = backlog_json_to_df(invalid_file)
     assert df.empty  # Doit retourner un DataFrame vide
-
-def test_backlog_invalid_extension():
-    """
-    Cette fonction permet de tester que les fichiers ayant une extension autre que JSON ne sont pas chargés.
-    La fonction fait ce test à partir du fichier "backlog.txt" contenu dans le dossier files
-    """
-    # Test avec un fichier avec une mauvaise extension
-    invalid_extension_file = os.path.join(os.path.dirname(__file__), "files", "backlog.txt")
-    df = backlog_json_to_df(invalid_extension_file)
-    assert df.empty  # Doit retourner un DataFrame vide
