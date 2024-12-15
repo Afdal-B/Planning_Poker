@@ -42,6 +42,6 @@ jobs:
     - name: Générer la documentation API avec sphinx-apidoc 
       run: |
         source venv/bin/activate
-        sphinx-apidoc -o docs ./server/functions
-        make -C docs html 
+        sphinx-apidoc -o server/docs ./server/functions
+        make -C ./server/docs html 
   
