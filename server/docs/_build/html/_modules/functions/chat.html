@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>functions.chat &mdash; Documentation Documentation Planning Pocker (Back-end) 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7a28dfa3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Documentation Planning Pocker (Back-end)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Documentation Planning Pocker (Back-end)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">functions.chat</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de functions.chat</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Ce module regroupe l&#39;ensemble des fonctionnalités de la messagerie.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1"># Importation des bibliothèques requises</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">pymongo.mongo_client</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">bson</span> <span class="kn">import</span> <span class="n">ObjectId</span>
+<span class="kn">from</span> <span class="nn">flask_socketio</span> <span class="kn">import</span> <span class="n">emit</span><span class="p">,</span> <span class="n">join_room</span><span class="p">,</span> <span class="n">leave_room</span>
+
+<span class="c1">#Connexion à la base de données </span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s2">&quot;mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=Cluster0&quot;</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s1">&#39;planning_poker&#39;</span><span class="p">]</span>
+<span class="n">messages_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;messages&#39;</span><span class="p">]</span>
+<span class="n">rooms_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]</span>
+
+<span class="c1">#Définition de la fonction d&#39;envoi de message</span>
+<div class="viewcode-block" id="send_message">
+<a class="viewcode-back" href="../../functions.html#functions.chat.send_message">[docs]</a>
+<span class="k">def</span> <span class="nf">send_message</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cette fonction permet d&#39;envoyer un message dans une room spécifique et l&#39;enregistre en base de données.</span>
+
+<span class="sd">    :param data: Un dictionnaire contenant les informations du message.</span>
+<span class="sd">    :return: Un message de confirmation ou d&#39;erreur.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">room_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;room_id&#39;</span><span class="p">)</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;user_id&#39;</span><span class="p">)</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;content&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">room_id</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">user_id</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">content</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;room_id, user_id, and content are required&quot;</span><span class="p">},</span> <span class="mi">400</span>
+    
+    <span class="n">message_id</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">ObjectId</span><span class="p">())</span>
+
+    <span class="c1"># Construction de l&#39;objet message</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="n">message_id</span><span class="p">,</span>
+        <span class="s2">&quot;room_id&quot;</span><span class="p">:</span> <span class="n">room_id</span><span class="p">,</span>
+        <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
+        <span class="s2">&quot;sent_at&quot;</span><span class="p">:</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">),</span>
+        <span class="s2">&quot;reactions&quot;</span><span class="p">:</span> <span class="p">{}</span>  <span class="c1"># Initialisation des réactions comme un dictionnaire vide</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Sauvgarde du message en base de données</span>
+    <span class="n">messages_collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="c1"># Ajout de l&#39;ID du message à la liste des messages de la room</span>
+    <span class="n">rooms_collection</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="n">room_id</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;$push&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;chat&quot;</span><span class="p">:</span> <span class="n">message_id</span><span class="p">}}</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Envoi du message aux utilisateurs de la room</span>
+    <span class="n">emit</span><span class="p">(</span><span class="s2">&quot;new_message&quot;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="n">message_id</span><span class="p">,</span>
+        <span class="s2">&quot;room_id&quot;</span><span class="p">:</span> <span class="n">room_id</span><span class="p">,</span>
+        <span class="s2">&quot;user_id&quot;</span><span class="p">:</span> <span class="n">user_id</span><span class="p">,</span>
+        <span class="s2">&quot;content&quot;</span><span class="p">:</span> <span class="n">content</span><span class="p">,</span>
+        <span class="s2">&quot;sent_at&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;sent_at&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;reactions&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;reactions&quot;</span><span class="p">]</span>
+    <span class="p">},</span> <span class="n">room</span><span class="o">=</span><span class="n">room_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Message sent successfully&quot;</span><span class="p">},</span> <span class="mi">200</span></div>
+
+
+<span class="c1">#Définition de la fonction de l&#39;ajout de réaction</span>
+<div class="viewcode-block" id="add_reaction">
+<a class="viewcode-back" href="../../functions.html#functions.chat.add_reaction">[docs]</a>
+<span class="k">def</span> <span class="nf">add_reaction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cette fonction permet d&#39;ajouter une réaction à un message spécifique.</span>
+
+<span class="sd">    :param data: Un dictionnaire contenant les informations de la réaction.</span>
+<span class="sd">    :return: Un message de confirmation ou d&#39;erreur.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">message_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;message_id&quot;</span><span class="p">)</span>
+    <span class="n">emoji</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;emoji&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">message_id</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">emoji</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;message_id and emoji are required&quot;</span><span class="p">},</span> <span class="mi">400</span>
+
+    <span class="c1"># Vérification de l&#39;existence du message</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">messages_collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="n">message_id</span><span class="p">})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Message not found&quot;</span><span class="p">},</span> <span class="mi">404</span>
+
+    <span class="c1"># Initialisation du champ `reactions` si nécessaire</span>
+    <span class="k">if</span> <span class="sa">f</span><span class="s2">&quot;reactions.</span><span class="si">{</span><span class="n">emoji</span><span class="si">}</span><span class="s2">&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">messages_collection</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="n">message_id</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;$set&quot;</span><span class="p">:</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;reactions.</span><span class="si">{</span><span class="n">emoji</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}}</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Incrémentation du compteur de la réaction</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">messages_collection</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="n">message_id</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;$inc&quot;</span><span class="p">:</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;reactions.</span><span class="si">{</span><span class="n">emoji</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}</span>
+    <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">modified_count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Failed to update reactions&quot;</span><span class="p">},</span> <span class="mi">500</span>
+
+    <span class="c1"># Envoi de la réaction aux utilisateurs de la room</span>
+    <span class="n">emit</span><span class="p">(</span><span class="s2">&quot;reaction_updated&quot;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s2">&quot;message_id&quot;</span><span class="p">:</span> <span class="n">message_id</span><span class="p">,</span>
+        <span class="s2">&quot;emoji&quot;</span><span class="p">:</span> <span class="n">emoji</span><span class="p">,</span>
+        <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="n">message</span><span class="p">[</span><span class="s2">&quot;reactions&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">emoji</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="p">},</span> <span class="n">broadcast</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;message&quot;</span><span class="p">:</span> <span class="s2">&quot;Reaction added successfully&quot;</span><span class="p">},</span> <span class="mi">200</span></div>
+
+
+<span class="c1">#Définition de la fonction de la récupération des messages</span>
+<div class="viewcode-block" id="fetch_chat_history">
+<a class="viewcode-back" href="../../functions.html#functions.chat.fetch_chat_history">[docs]</a>
+<span class="k">def</span> <span class="nf">fetch_chat_history</span><span class="p">(</span><span class="n">room_id</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cette fonction permet de récupérer l&#39;historique des messages d&#39;une room spécifique.</span>
+
+<span class="sd">    :param room_id: L&#39;ID de la room.</span>
+<span class="sd">    :return: Un dictionnaire contenant la liste des messages et les réactions ou un message d&#39;erreur.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">room_id</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;room_id is required&quot;</span><span class="p">},</span> <span class="mi">400</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">ObjectId</span><span class="o">.</span><span class="n">is_valid</span><span class="p">(</span><span class="n">room_id</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Invalid ObjectId format.&quot;</span><span class="p">},</span> <span class="mi">400</span>
+    <span class="c1"># Recherche de la room correspondante et récupération des IDs des messages</span>
+    <span class="n">room</span> <span class="o">=</span> <span class="n">rooms_collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="n">room_id</span><span class="p">})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">room</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Room not found&quot;</span><span class="p">},</span> <span class="mi">404</span>
+
+    <span class="n">message_ids</span> <span class="o">=</span> <span class="n">room</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chat&quot;</span><span class="p">,</span> <span class="p">[])</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">messages_collection</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$in&quot;</span><span class="p">:</span> <span class="n">message_ids</span><span class="p">}}))</span>
+
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;chat&quot;</span><span class="p">:</span> <span class="n">messages</span><span class="p">},</span> <span class="mi">200</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur 2024, Afdal BOURAIMA, Yousra BOUHANNA, Elias AIT HASSOU.</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

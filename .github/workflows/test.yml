@@ -39,10 +39,16 @@ jobs:
         source venv/bin/activate 
         pytest ./server/tests/
     
-    - name: Générer la documentation API avec sphinx-apidoc 
-      run: | # Lance le package 
-        source venv/bin/activate
-        rm -rf server/docs/*.rst server/docs/_build
-        sphinx-apidoc -o server/docs ./server/functions
-        make -C ./server/docs html 
-  
+    - name: Supprime le fichier functions.rst
+      run: |
+        rm server/docs/functions.rst  
+
+    - name: Génère la documentation dans le dossier docs
+      run: |
+        cd server  
+        sphinx-apidoc -o docs ./functions  
+
+    - name: Relance la création des fichiers HTML
+      run: |
+        cd server/docs  
+        make html

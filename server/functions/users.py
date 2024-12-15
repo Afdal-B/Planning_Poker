@@ -1,22 +1,15 @@
 """
-Ce module regroupe l'ensemble des fonctions permettant d'intéragir les utilisateurs jouant une partie de Planning Pocker.
+Ce module regroupe l'ensemble des fonctions permettant d'intéragir avec les utilisateurs.
 """
-
+import sys
+sys.path.append('/server/functions')
+import string, random
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient
-import sys
-import os
-
-# Ajout du dossier "server" au chemin de recherche
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(current_dir)
-
-from rooms import verify_exist_room_code
-
+from .rooms import verify_exist_room_code
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']
 
-# Création des collections
 rooms_collection = db['rooms']
 tasks_collection = db['tasks']
 rounds_collection = db['rounds']

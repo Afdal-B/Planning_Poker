@@ -12,18 +12,10 @@ functions.backlog module
    :undoc-members:
    :show-inheritance:
 
-functions.database module
--------------------------
+functions.chat module
+---------------------
 
-.. automodule:: functions.database
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-functions.messages module
--------------------------
-
-.. automodule:: functions.messages
+.. automodule:: functions.chat
    :members:
    :undoc-members:
    :show-inheritance:

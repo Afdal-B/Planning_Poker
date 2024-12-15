@@ -40,11 +40,8 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">functions</a></li>
-</ul>
-
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
         </div>
       </div>
     </nav>
@@ -84,21 +81,20 @@
 <span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s1">&#39;planning_poker&#39;</span><span class="p">]</span>
 <span class="n">tasks_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;tasks&#39;</span><span class="p">]</span>
 
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
 <div class="viewcode-block" id="backlog_json_to_df">
 <a class="viewcode-back" href="../../functions.html#functions.backlog.backlog_json_to_df">[docs]</a>
 <span class="k">def</span> <span class="nf">backlog_json_to_df</span><span class="p">(</span><span class="n">backlog_json</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Cette fonction vérifie la structure d&#39;un backlog importé au format JSON et le convertit en DataFrame</span>
-<span class="sd">    avant insertion en base de données.</span>
+<span class="sd">    avant insertion en base de données. Elle accepte deux structures :</span>
+<span class="sd">    1. 3 colonnes : [&quot;en_tant_que&quot;, &quot;fonctionnalite&quot;, &quot;objectif&quot;]</span>
+<span class="sd">    2. 4 colonnes : [&quot;en_tant_que&quot;, &quot;fonctionnalite&quot;, &quot;objectif&quot;, &quot;estimation&quot;] (backlog temporaire)</span>
 <span class="sd">    </span>
-<span class="sd">    :param backlog_json: Chemin du fichier backlog au format JSON.</span>
+<span class="sd">    :param backlog_json: Le contenu du fichier JSON.</span>
 <span class="sd">    :returns DataFrame: Un DataFrame contenant les données si le fichier est bien structuré, sinon un DataFrame vide.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># Vérification de l&#39;extension du fichier avant de le charger</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">backlog_json</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.json&#39;</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erreur : Le fichier importé n&#39;est pas un fichier JSON.&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    
     <span class="k">try</span><span class="p">:</span>
         <span class="c1"># Tentative de chargement du fichier JSON</span>
         <span class="n">backlog_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">backlog_json</span><span class="p">)</span>
@@ -108,15 +104,23 @@
     <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur : Le fichier JSON spécifié est introuvable : </span><span class="si">{</span><span class="n">backlog_json</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    
-    <span class="c1"># Vérification de la structure du backlog</span>
-    <span class="n">expected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;en_tant_que&quot;</span><span class="p">,</span> <span class="s2">&quot;fonctionnalite&quot;</span><span class="p">,</span> <span class="s2">&quot;objectif&quot;</span><span class="p">]</span>
-    <span class="n">missing_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">expected_columns</span> <span class="k">if</span> <span class="n">col</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">backlog_df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">missing_columns</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur : Les colonnes suivantes sont manquantes dans le fichier : </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">missing_columns</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Vérification de la structure du backlog : soit 3 colonnes, soit 4 colonnes</span>
+    <span class="n">expected_columns_3</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;en_tant_que&quot;</span><span class="p">,</span> <span class="s2">&quot;fonctionnalite&quot;</span><span class="p">,</span> <span class="s2">&quot;objectif&quot;</span><span class="p">]</span>
+    <span class="n">expected_columns_4</span> <span class="o">=</span> <span class="n">expected_columns_3</span> <span class="o">+</span> <span class="p">[</span><span class="s2">&quot;estimation&quot;</span><span class="p">]</span>
+
+    <span class="c1"># Vérifier si le fichier a 3 ou 4 colonnes</span>
+    <span class="k">if</span> <span class="n">backlog_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">expected_columns_3</span><span class="p">)):</span>
+        <span class="c1"># Structure avec 3 colonnes</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Structure du backlog : 3 colonnes détectées.&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">backlog_df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">equals</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Index</span><span class="p">(</span><span class="n">expected_columns_4</span><span class="p">)):</span>
+        <span class="c1"># Structure avec 4 colonnes</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Structure du backlog : 4 colonnes détectées.&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Erreur : Le fichier JSON ne correspond ni à la structure à 3 ni à la structure à 4 colonnes.&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
-    
-    <span class="c1"># Retourne le DataFrame si tout est correct</span>
+
+    <span class="c1"># Retourne le DataFrame si la structure est valide</span>
     <span class="k">return</span> <span class="n">backlog_df</span></div>
 
 
