@@ -40,8 +40,9 @@ jobs:
         pytest ./server/tests/
     
     - name: Générer la documentation API avec sphinx-apidoc 
-      run: |
+      run: | # Lance le package 
         source venv/bin/activate
+        rm -rf server/docs/*.rst server/docs/_build
         sphinx-apidoc -o server/docs ./server/functions
         make -C ./server/docs html 
   
