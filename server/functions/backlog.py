@@ -39,10 +39,10 @@ def backlog_json_to_df(backlog_json) -> pd.DataFrame:
     expected_columns_4 = expected_columns_3 + ["estimation"]
 
     # Vérifier si le fichier a 3 ou 4 colonnes
-    if set(backlog_df.columns) == set(expected_columns_3):
+    if backlog_df.columns == expected_columns_3:
         # Structure avec 3 colonnes
         print("Structure du backlog : 3 colonnes détectées.")
-    elif set(backlog_df.columns) == set(expected_columns_4):
+    elif backlog_df.columns == expected_columns_4:
         # Structure avec 4 colonnes
         print("Structure du backlog : 4 colonnes détectées.")
     else:
@@ -51,7 +51,6 @@ def backlog_json_to_df(backlog_json) -> pd.DataFrame:
 
     # Retourne le DataFrame si la structure est valide
     return backlog_df
-
 
 def export_backlog_to_json(room_code):
     """
