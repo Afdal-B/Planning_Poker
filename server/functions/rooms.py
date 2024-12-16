@@ -6,7 +6,7 @@ sys.path.append('/server/functions')
 import string, random
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient
-from server.functions.backlog import backlog_json_to_df, upload_backlog
+from .backlog import backlog_json_to_df, upload_backlog
 
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']
@@ -29,7 +29,7 @@ def create_room(room_name, game_rule, backlog_json, username_creator, avatar_cre
     :return: Un dictionnaire contenant le room_code et le user_id du créateur, ou un message d'erreur.
     """
     # import à ce niveau pour éviter une boucle entre les boucles entre les modules
-    from server.functions.users import create_user
+    from .users import create_user
 
     try:
         # Vérification et chargement du backlog json dans une DataFrame
@@ -125,3 +125,41 @@ def generate_room_code()->str:
         room_code = str.upper(room_code)
         if not verify_exist_room_code(room_code):
             return room_code
+        
+def create_user(username, avatar, room_code):
+    """
+    Cette fonction permet de créer un utilisateur lorsqu'il souhaite rejoindre une room.
+    
+    :param username: nom d'utilisateur
+    :param avatar: lien vers l'image de l'avatar choisi
+    :param room_code: code de la room à rejoindre
+    """
+
+    # Vérification de l'existence de la room
+    if not verify_exist_room_code(room_code):
+        print("La room que vous tentez de rejoindre n'existe pas.")
+        return None
+
+    # Vérification si le username est déjà utilisé dans cette room
+    existing_user = users_collection.find_one({"room_code": room_code, "username": username})
+    if existing_user:
+        print(f"Le nom d'utilisateur '{username}' est déjà pris dans cette room. Veuillez en choisir un autre.")
+        return None
+
+    # Si le nom d'utilisateur est disponible, création de l'utilisateur
+    user_document = {
+        "_id": str(ObjectId()),
+        "username": username,
+        "avatar": avatar,
+        "room_code": room_code   
+    }
+
+    # Insertion en base de données
+    try:
+        users_collection.insert_one(user_document)
+        print(f"L'utilisateur {username} a été créé avec succès dans la room {room_code}.")
+    except Exception as e:
+        print(f"Erreur lors de l'insertion du document: {e}")
+        return None
+    
+    return user_document["_id"]

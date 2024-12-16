@@ -40,7 +40,7 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+              <p class="caption" role="heading"><span class="caption-text">Les différents modules</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">functions</a></li>
 </ul>
@@ -72,18 +72,27 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#B"><strong>B</strong></a>
+ <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#P"><strong>P</strong></a>
- | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
  
 </div>
+<h2 id="A">A</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="functions.html#functions.chat.add_reaction">add_reaction() (dans le module functions.chat)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -95,20 +104,16 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rooms.html#rooms.create_room">create_room() (dans le module rooms)</a>
+      <li><a href="functions.html#functions.rooms.create_room">create_room() (dans le module functions.rooms)</a>
 </li>
       <li><a href="functions.html#functions.rounds.create_round">create_round() (dans le module functions.rounds)</a>
-
-      <ul>
-        <li><a href="rounds.html#rounds.create_round">(dans le module rounds)</a>
 </li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="functions.html#functions.users.create_user">create_user() (dans le module functions.users)</a>
+      <li><a href="functions.html#functions.rooms.create_user">create_user() (dans le module functions.rooms)</a>
 
       <ul>
-        <li><a href="users.html#users.create_user">(dans le module users)</a>
+        <li><a href="functions.html#functions.users.create_user">(dans le module functions.users)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -125,6 +130,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="functions.html#functions.chat.fetch_chat_history">fetch_chat_history() (dans le module functions.chat)</a>
+</li>
       <li>
     functions
 
@@ -140,14 +147,21 @@
 </li>
       </ul></li>
       <li>
-    functions.messages
+    functions.chat
 
       <ul>
-        <li><a href="functions.html#module-functions.messages">module</a>
+        <li><a href="functions.html#module-functions.chat">module</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li>
+    functions.rooms
+
+      <ul>
+        <li><a href="functions.html#module-functions.rooms">module</a>
+</li>
+      </ul></li>
       <li>
     functions.rounds
 
@@ -168,31 +182,20 @@
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rooms.html#rooms.generate_room_code">generate_room_code() (dans le module rooms)</a>
-</li>
-      <li><a href="rooms.html#rooms.get_users_in_room">get_users_in_room() (dans le module rooms)</a>
+      <li><a href="functions.html#functions.rooms.generate_room_code">generate_room_code() (dans le module functions.rooms)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="functions.html#functions.rounds.get_votes_for_task_in_round">get_votes_for_task_in_round() (dans le module functions.rounds)</a>
-
-      <ul>
-        <li><a href="rounds.html#rounds.get_votes_for_task_in_round">(dans le module rounds)</a>
+      <li><a href="functions.html#functions.rooms.get_users_in_room">get_users_in_room() (dans le module functions.rooms)</a>
 </li>
-      </ul></li>
+      <li><a href="functions.html#functions.rounds.get_votes_for_task_in_round">get_votes_for_task_in_round() (dans le module functions.rounds)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    messages
-
-      <ul>
-        <li><a href="messages.html#module-messages">module</a>
-</li>
-      </ul></li>
       <li>
     module
 
@@ -201,19 +204,13 @@
 </li>
         <li><a href="functions.html#module-functions.backlog">functions.backlog</a>
 </li>
-        <li><a href="functions.html#module-functions.messages">functions.messages</a>
+        <li><a href="functions.html#module-functions.chat">functions.chat</a>
+</li>
+        <li><a href="functions.html#module-functions.rooms">functions.rooms</a>
 </li>
         <li><a href="functions.html#module-functions.rounds">functions.rounds</a>
 </li>
         <li><a href="functions.html#module-functions.users">functions.users</a>
-</li>
-        <li><a href="messages.html#module-messages">messages</a>
-</li>
-        <li><a href="rooms.html#module-rooms">rooms</a>
-</li>
-        <li><a href="rounds.html#module-rounds">rounds</a>
-</li>
-        <li><a href="users.html#module-users">users</a>
 </li>
       </ul></li>
   </ul></td>
@@ -223,33 +220,15 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="functions.html#functions.rounds.partie_stricte">partie_stricte() (dans le module functions.rounds)</a>
-
-      <ul>
-        <li><a href="rounds.html#rounds.partie_stricte">(dans le module rounds)</a>
 </li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
-<h2 id="R">R</h2>
+<h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    rooms
-
-      <ul>
-        <li><a href="rooms.html#module-rooms">module</a>
+      <li><a href="functions.html#functions.chat.send_message">send_message() (dans le module functions.chat)</a>
 </li>
-      </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    rounds
-
-      <ul>
-        <li><a href="rounds.html#module-rounds">module</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -259,30 +238,17 @@
       <li><a href="functions.html#functions.backlog.upload_backlog">upload_backlog() (dans le module functions.backlog)</a>
 </li>
   </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li>
-    users
-
-      <ul>
-        <li><a href="users.html#module-users">module</a>
-</li>
-      </ul></li>
-  </ul></td>
 </tr></table>
 
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="rooms.html#rooms.verify_exist_room_code">verify_exist_room_code() (dans le module rooms)</a>
+      <li><a href="functions.html#functions.rooms.verify_exist_room_code">verify_exist_room_code() (dans le module functions.rooms)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="functions.html#functions.rounds.vote_for_task_in_round">vote_for_task_in_round() (dans le module functions.rounds)</a>
-
-      <ul>
-        <li><a href="rounds.html#rounds.vote_for_task_in_round">(dans le module rounds)</a>
 </li>
-      </ul></li>
   </ul></td>
 </tr></table>
 

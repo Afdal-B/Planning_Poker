@@ -19,9 +19,7 @@
       <script src="_static/translations.js?v=e6b791cb"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Recherche" href="search.html" />
-    <link rel="next" title="backlog module" href="backlog.html" />
-    <link rel="prev" title="Documentation Planning Pocker (Back-end) documentation" href="index.html" /> 
+    <link rel="search" title="Recherche" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,19 +41,11 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">functions</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="backlog.html">backlog module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="messages.html">messages module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rooms.html">rooms module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="rounds.html">rounds module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="users.html">users module</a></li>
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">functions</a></li>
 </ul>
-</li>
-</ul>
-
+</div>
         </div>
       </div>
     </nav>
@@ -84,25 +74,40 @@
 <h1>functions<a class="headerlink" href="#functions" title="Lien vers cette rubrique"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="backlog.html">backlog module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="database.html">database module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="messages.html">messages module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="rooms.html">rooms module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rooms.html#rooms.create_room"><code class="docutils literal notranslate"><span class="pre">create_room()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rooms.html#rooms.generate_room_code"><code class="docutils literal notranslate"><span class="pre">generate_room_code()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rooms.html#rooms.get_users_in_room"><code class="docutils literal notranslate"><span class="pre">get_users_in_room()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rooms.html#rooms.verify_exist_room_code"><code class="docutils literal notranslate"><span class="pre">verify_exist_room_code()</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions.html">functions package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="functions.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html#module-functions.backlog">functions.backlog module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.backlog.backlog_json_to_df"><code class="docutils literal notranslate"><span class="pre">backlog_json_to_df()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.backlog.export_backlog_to_json"><code class="docutils literal notranslate"><span class="pre">export_backlog_to_json()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.backlog.upload_backlog"><code class="docutils literal notranslate"><span class="pre">upload_backlog()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="rounds.html">rounds module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="rounds.html#rounds.create_round"><code class="docutils literal notranslate"><span class="pre">create_round()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rounds.html#rounds.get_votes_for_task_in_round"><code class="docutils literal notranslate"><span class="pre">get_votes_for_task_in_round()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rounds.html#rounds.partie_stricte"><code class="docutils literal notranslate"><span class="pre">partie_stricte()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="rounds.html#rounds.vote_for_task_in_round"><code class="docutils literal notranslate"><span class="pre">vote_for_task_in_round()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html#module-functions.chat">functions.chat module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.chat.add_reaction"><code class="docutils literal notranslate"><span class="pre">add_reaction()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.chat.fetch_chat_history"><code class="docutils literal notranslate"><span class="pre">fetch_chat_history()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.chat.send_message"><code class="docutils literal notranslate"><span class="pre">send_message()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="users.html">users module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="users.html#users.create_user"><code class="docutils literal notranslate"><span class="pre">create_user()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html#module-functions.rooms">functions.rooms module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.rooms.create_room"><code class="docutils literal notranslate"><span class="pre">create_room()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.rooms.create_user"><code class="docutils literal notranslate"><span class="pre">create_user()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.rooms.generate_room_code"><code class="docutils literal notranslate"><span class="pre">generate_room_code()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.rooms.get_users_in_room"><code class="docutils literal notranslate"><span class="pre">get_users_in_room()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.rooms.verify_exist_room_code"><code class="docutils literal notranslate"><span class="pre">verify_exist_room_code()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html#module-functions.rounds">functions.rounds module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.rounds.create_round"><code class="docutils literal notranslate"><span class="pre">create_round()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.rounds.get_votes_for_task_in_round"><code class="docutils literal notranslate"><span class="pre">get_votes_for_task_in_round()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.rounds.partie_stricte"><code class="docutils literal notranslate"><span class="pre">partie_stricte()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.rounds.vote_for_task_in_round"><code class="docutils literal notranslate"><span class="pre">vote_for_task_in_round()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html#module-functions.users">functions.users module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="functions.html#functions.users.create_user"><code class="docutils literal notranslate"><span class="pre">create_user()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="functions.html#module-functions">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -112,10 +117,7 @@
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
-        <a href="index.html" class="btn btn-neutral float-left" title="Documentation Planning Pocker (Back-end) documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
-        <a href="backlog.html" class="btn btn-neutral float-right" title="backlog module" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 

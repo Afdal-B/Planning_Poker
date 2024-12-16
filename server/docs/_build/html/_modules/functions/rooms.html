@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="fr" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>functions.rooms &mdash; Documentation Documentation Planning Pocker (Back-end) 1.0</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=7a28dfa3"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="../../_static/translations.js?v=e6b791cb"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Recherche" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Documentation Planning Pocker (Back-end)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Rechercher docs" aria-label="Rechercher docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Documentation Planning Pocker (Back-end)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Code du module</a></li>
+      <li class="breadcrumb-item active">functions.rooms</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Code source de functions.rooms</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Ce module regroupe l&#39;ensemble des fonctions permettant d&#39;intéragir avec les salons de jeu &quot;rooms&quot;.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/server/functions&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">string</span><span class="o">,</span> <span class="nn">random</span>
+<span class="kn">from</span> <span class="nn">bson</span> <span class="kn">import</span> <span class="n">ObjectId</span>
+<span class="kn">from</span> <span class="nn">pymongo.mongo_client</span> <span class="kn">import</span> <span class="n">MongoClient</span>
+<span class="kn">from</span> <span class="nn">.backlog</span> <span class="kn">import</span> <span class="n">backlog_json_to_df</span><span class="p">,</span> <span class="n">upload_backlog</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s2">&quot;mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=Cluster0&quot;</span><span class="p">)</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s1">&#39;planning_poker&#39;</span><span class="p">]</span>
+
+<span class="n">rooms_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]</span>
+<span class="n">tasks_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;tasks&#39;</span><span class="p">]</span>
+<span class="n">rounds_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;rounds&#39;</span><span class="p">]</span>
+<span class="n">users_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;users&#39;</span><span class="p">]</span>
+<span class="n">messages_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;messages&#39;</span><span class="p">]</span>
+
+<div class="viewcode-block" id="create_room">
+<a class="viewcode-back" href="../../functions.html#functions.rooms.create_room">[docs]</a>
+<span class="k">def</span> <span class="nf">create_room</span><span class="p">(</span><span class="n">room_name</span><span class="p">,</span> <span class="n">game_rule</span><span class="p">,</span> <span class="n">backlog_json</span><span class="p">,</span> <span class="n">username_creator</span><span class="p">,</span> <span class="n">avatar_creator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cette fonction permet de créer une room en base de données.</span>
+
+<span class="sd">    :param room_name: Le nom de la room.</span>
+<span class="sd">    :param game_rule: La règle de jeu choisie pour cette partie.</span>
+<span class="sd">    :param backlog_json: Le fichier du backlog au format json.</span>
+<span class="sd">    :param username_creator: Le nom d&#39;utilisateur du créateur de la room.</span>
+<span class="sd">    :param avatar_creator: L&#39;avatar du créateur de la room.</span>
+<span class="sd">    :return: Un dictionnaire contenant le room_code et le user_id du créateur, ou un message d&#39;erreur.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># import à ce niveau pour éviter une boucle entre les boucles entre les modules</span>
+    <span class="kn">from</span> <span class="nn">.users</span> <span class="kn">import</span> <span class="n">create_user</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Vérification et chargement du backlog json dans une DataFrame</span>
+        <span class="n">backlog</span> <span class="o">=</span> <span class="n">backlog_json_to_df</span><span class="p">(</span><span class="n">backlog_json</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">backlog</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Le backlog est vide ou invalide.&quot;</span><span class="p">}</span>
+
+        <span class="c1"># Génération du room_code</span>
+        <span class="n">room_code</span> <span class="o">=</span> <span class="n">generate_room_code</span><span class="p">()</span>
+
+        <span class="c1"># Chargement des tâches en base de données et récupération des ids</span>
+        <span class="n">tasks_ids</span> <span class="o">=</span> <span class="n">upload_backlog</span><span class="p">(</span><span class="n">backlog</span><span class="p">,</span> <span class="n">room_code</span><span class="p">)</span>
+
+        <span class="c1"># Création du document de la room</span>
+        <span class="n">room_document</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ObjectId</span><span class="p">()),</span>
+            <span class="s2">&quot;room_name&quot;</span><span class="p">:</span> <span class="n">room_name</span><span class="p">,</span>
+            <span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room_code</span><span class="p">,</span>
+            <span class="s2">&quot;creator_user_id&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;backlog&quot;</span><span class="p">:</span> <span class="n">tasks_ids</span><span class="p">,</span>
+            <span class="s2">&quot;chat&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;current_round&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="s2">&quot;game_rule&quot;</span><span class="p">:</span> <span class="n">game_rule</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="c1"># Insertion de la room dans la base de données</span>
+        <span class="n">rooms_collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">room_document</span><span class="p">)</span>
+
+        <span class="c1"># Création de l&#39;utilisateur (le créateur de la room)</span>
+        <span class="n">creator_user_id</span> <span class="o">=</span> <span class="n">create_user</span><span class="p">(</span><span class="n">username_creator</span><span class="p">,</span> <span class="n">avatar_creator</span><span class="p">,</span> <span class="n">room_code</span><span class="p">)</span>
+
+        <span class="c1"># Mise à jour du document de la room avec l&#39;ID du créateur</span>
+        <span class="n">rooms_collection</span><span class="o">.</span><span class="n">update_one</span><span class="p">(</span>
+            <span class="p">{</span><span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room_code</span><span class="p">},</span>
+            <span class="p">{</span><span class="s2">&quot;$set&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;creator_user_id&quot;</span><span class="p">:</span> <span class="n">creator_user_id</span><span class="p">}}</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Renvoie du dictionnaire avec le room code et l&#39;user id du créateur</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room_code</span><span class="p">,</span> <span class="s2">&quot;creator_user_id&quot;</span><span class="p">:</span> <span class="n">creator_user_id</span><span class="p">}</span>
+
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors de l&#39;insertion de la room ou de l&#39;utilisateur: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Une erreur est survenue: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span></div>
+
+
+    
+<div class="viewcode-block" id="get_users_in_room">
+<a class="viewcode-back" href="../../functions.html#functions.rooms.get_users_in_room">[docs]</a>
+<span class="k">def</span> <span class="nf">get_users_in_room</span><span class="p">(</span><span class="n">room_code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Récupère tous les utilisateurs ayant rejoint une salle spécifique via un code room.</span>
+<span class="sd">    </span>
+<span class="sd">    :param room_code: Le code unique de la room.</span>
+<span class="sd">    :return: Un dictionnaire contenant la liste des utilisateurs ou un message d&#39;erreur.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Recherche de la room correspondante</span>
+    <span class="n">room</span> <span class="o">=</span> <span class="n">rooms_collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room_code</span><span class="p">})</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">room</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Room non trouvée&quot;</span><span class="p">}</span>
+    
+    <span class="c1"># Recherche des utilisateurs ayant rejoint cette salle</span>
+    <span class="n">users</span> <span class="o">=</span> <span class="n">users_collection</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room</span><span class="p">[</span><span class="s2">&quot;room_code&quot;</span><span class="p">]},</span> <span class="p">{</span><span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;avatar&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+    
+    <span class="c1"># Conversion des résultats en liste</span>
+    <span class="n">user_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">users</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">user_list</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="s2">&quot;Aucun utilisateur trouvé dans cette salle&quot;</span><span class="p">}</span>
+    
+    <span class="c1"># Formatage de la réponse</span>
+    <span class="k">return</span> <span class="n">user_list</span></div>
+
+
+<div class="viewcode-block" id="verify_exist_room_code">
+<a class="viewcode-back" href="../../functions.html#functions.rooms.verify_exist_room_code">[docs]</a>
+<span class="k">def</span> <span class="nf">verify_exist_room_code</span><span class="p">(</span><span class="n">room_code</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cette fonction vérifie l&#39;unicité des code rooms qui sont générés aléatoirement.</span>
+<span class="sd">    La fonction retourne True si le room_code existe en base de données, False sinon.</span>
+
+<span class="sd">    :param room_code: Code la room à vérifier</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">existing_room</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">rooms</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s1">&#39;room_code&#39;</span><span class="p">:</span> <span class="n">room_code</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">existing_room</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>  </div>
+
+
+<div class="viewcode-block" id="generate_room_code">
+<a class="viewcode-back" href="../../functions.html#functions.rooms.generate_room_code">[docs]</a>
+<span class="k">def</span> <span class="nf">generate_room_code</span><span class="p">()</span><span class="o">-&gt;</span><span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cette fonction génère un code d&#39;accès à une room de 6 caractères. Le code suivra la structure suivante : XXX-XXX</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">characters</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_letters</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">digits</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">room_code</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">characters</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
+        <span class="n">room_code</span> <span class="o">=</span> <span class="n">room_code</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span> <span class="o">+</span> <span class="n">room_code</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span>
+        <span class="n">room_code</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">upper</span><span class="p">(</span><span class="n">room_code</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">verify_exist_room_code</span><span class="p">(</span><span class="n">room_code</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">room_code</span></div>
+
+        
+<div class="viewcode-block" id="create_user">
+<a class="viewcode-back" href="../../functions.html#functions.rooms.create_user">[docs]</a>
+<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">avatar</span><span class="p">,</span> <span class="n">room_code</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Cette fonction permet de créer un utilisateur lorsqu&#39;il souhaite rejoindre une room.</span>
+<span class="sd">    </span>
+<span class="sd">    :param username: nom d&#39;utilisateur</span>
+<span class="sd">    :param avatar: lien vers l&#39;image de l&#39;avatar choisi</span>
+<span class="sd">    :param room_code: code de la room à rejoindre</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Vérification de l&#39;existence de la room</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verify_exist_room_code</span><span class="p">(</span><span class="n">room_code</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La room que vous tentez de rejoindre n&#39;existe pas.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Vérification si le username est déjà utilisé dans cette room</span>
+    <span class="n">existing_user</span> <span class="o">=</span> <span class="n">users_collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room_code</span><span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">existing_user</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Le nom d&#39;utilisateur &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; est déjà pris dans cette room. Veuillez en choisir un autre.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Si le nom d&#39;utilisateur est disponible, création de l&#39;utilisateur</span>
+    <span class="n">user_document</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ObjectId</span><span class="p">()),</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+        <span class="s2">&quot;avatar&quot;</span><span class="p">:</span> <span class="n">avatar</span><span class="p">,</span>
+        <span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room_code</span>   
+    <span class="p">}</span>
+
+    <span class="c1"># Insertion en base de données</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">users_collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">user_document</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;L&#39;utilisateur </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> a été créé avec succès dans la room </span><span class="si">{</span><span class="n">room_code</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors de l&#39;insertion du document: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="k">return</span> <span class="n">user_document</span><span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">]</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Droits d'auteur 2024, Afdal BOURAIMA, Yousra BOUHANNA, Elias AIT HASSOU.</p>
+  </div>
+
+  Compilé avec <a href="https://www.sphinx-doc.org/">Sphinx</a> en utilisant un
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">thème</a>
+    fourni par <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

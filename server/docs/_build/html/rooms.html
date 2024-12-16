@@ -21,7 +21,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Recherche" href="search.html" />
     <link rel="next" title="rounds module" href="rounds.html" />
-    <link rel="prev" title="messages module" href="messages.html" /> 
+    <link rel="prev" title="backlog module" href="backlog.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -47,15 +47,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">functions</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="backlog.html">backlog module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="database.html">database module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="messages.html">messages module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">rooms module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#rooms.create_room"><code class="docutils literal notranslate"><span class="pre">create_room()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#rooms.generate_room_code"><code class="docutils literal notranslate"><span class="pre">generate_room_code()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#rooms.get_users_in_room"><code class="docutils literal notranslate"><span class="pre">get_users_in_room()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#rooms.verify_exist_room_code"><code class="docutils literal notranslate"><span class="pre">verify_exist_room_code()</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">rooms module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="rounds.html">rounds module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="users.html">users module</a></li>
 </ul>
@@ -87,68 +79,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-rooms">
-<span id="rooms-module"></span><h1>rooms module<a class="headerlink" href="#module-rooms" title="Lien vers cette rubrique"></a></h1>
-<p>Ce module regroupe l’ensemble des fonctions permettant d’intéragir avec les salons de jeu « rooms ».</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="rooms.create_room">
-<span class="sig-prename descclassname"><span class="pre">rooms.</span></span><span class="sig-name descname"><span class="pre">create_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">game_rule</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backlog_json</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">username_creator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">avatar_creator</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/rooms.html#create_room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rooms.create_room" title="Lien vers cette définition"></a></dt>
-<dd><p>Cette fonction permet de créer une room en base de données.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>room_name</strong> – Le nom de la room.</p></li>
-<li><p><strong>game_rule</strong> – La règle de jeu choisie pour cette partie.</p></li>
-<li><p><strong>backlog_json</strong> – Le fichier du backlog au format json.</p></li>
-<li><p><strong>username_creator</strong> – Le nom d’utilisateur du créateur de la room.</p></li>
-<li><p><strong>avatar_creator</strong> – L’avatar du créateur de la room.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Renvoie<span class="colon">:</span></dt>
-<dd class="field-even"><p>Le room code généré après insertion en base de données.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="rooms.generate_room_code">
-<span class="sig-prename descclassname"><span class="pre">rooms.</span></span><span class="sig-name descname"><span class="pre">generate_room_code</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/rooms.html#generate_room_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rooms.generate_room_code" title="Lien vers cette définition"></a></dt>
-<dd><p>Cette fonction génère un code d’accès à une room de 6 caractères. Le code suivra la structure suivante : XXX-XXX</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="rooms.get_users_in_room">
-<span class="sig-prename descclassname"><span class="pre">rooms.</span></span><span class="sig-name descname"><span class="pre">get_users_in_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/rooms.html#get_users_in_room"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rooms.get_users_in_room" title="Lien vers cette définition"></a></dt>
-<dd><p>Récupère tous les utilisateurs ayant rejoint une salle spécifique via un code room.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>room_code</strong> – Le code unique de la room.</p>
-</dd>
-<dt class="field-even">Renvoie<span class="colon">:</span></dt>
-<dd class="field-even"><p>Un dictionnaire contenant la liste des utilisateurs ou un message d’erreur.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="rooms.verify_exist_room_code">
-<span class="sig-prename descclassname"><span class="pre">rooms.</span></span><span class="sig-name descname"><span class="pre">verify_exist_room_code</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_code</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/rooms.html#verify_exist_room_code"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#rooms.verify_exist_room_code" title="Lien vers cette définition"></a></dt>
-<dd><p>Cette fonction vérifie l’unicité des code rooms qui sont générés aléatoirement.
-La fonction retourne True si le room_code existe en base de données, False sinon.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Paramètres<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>room_code</strong> – Code la room à vérifier</p>
-</dd>
-</dl>
-</dd></dl>
-
+  <section id="rooms-module">
+<h1>rooms module<a class="headerlink" href="#rooms-module" title="Lien vers cette rubrique"></a></h1>
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Pied de page">
-        <a href="messages.html" class="btn btn-neutral float-left" title="messages module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
+        <a href="backlog.html" class="btn btn-neutral float-left" title="backlog module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Précédent</a>
         <a href="rounds.html" class="btn btn-neutral float-right" title="rounds module" accesskey="n" rel="next">Suivant <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

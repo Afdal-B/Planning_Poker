@@ -40,11 +40,8 @@
   </form>
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="../../modules.html">functions</a></li>
-</ul>
-
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
         </div>
       </div>
     </nav>
@@ -71,24 +68,17 @@
              
   <h1>Code source de functions.users</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Ce module regroupe l&#39;ensemble des fonctions permettant d&#39;intéragir les utilisateurs jouant une partie de Planning Pocker.</span>
+<span class="sd">Ce module regroupe l&#39;ensemble des fonctions permettant d&#39;intéragir avec les utilisateurs.</span>
 <span class="sd">&quot;&quot;&quot;</span>
-
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;/server/functions&#39;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">string</span><span class="o">,</span> <span class="nn">random</span>
 <span class="kn">from</span> <span class="nn">bson</span> <span class="kn">import</span> <span class="n">ObjectId</span>
 <span class="kn">from</span> <span class="nn">pymongo.mongo_client</span> <span class="kn">import</span> <span class="n">MongoClient</span>
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
-
-<span class="c1"># Ajout du dossier &quot;server&quot; au chemin de recherche</span>
-<span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_dir</span><span class="p">)</span>
-
-<span class="kn">from</span> <span class="nn">rooms</span> <span class="kn">import</span> <span class="n">verify_exist_room_code</span>
-
+<span class="kn">from</span> <span class="nn">.rooms</span> <span class="kn">import</span> <span class="n">verify_exist_room_code</span>
 <span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s2">&quot;mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&amp;w=majority&amp;appName=Cluster0&quot;</span><span class="p">)</span>
 <span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s1">&#39;planning_poker&#39;</span><span class="p">]</span>
 
-<span class="c1"># Création des collections</span>
 <span class="n">rooms_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;rooms&#39;</span><span class="p">]</span>
 <span class="n">tasks_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;tasks&#39;</span><span class="p">]</span>
 <span class="n">rounds_collection</span> <span class="o">=</span> <span class="n">db</span><span class="p">[</span><span class="s1">&#39;rounds&#39;</span><span class="p">]</span>
@@ -97,30 +87,42 @@
 
 <div class="viewcode-block" id="create_user">
 <a class="viewcode-back" href="../../functions.html#functions.users.create_user">[docs]</a>
-<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">username</span><span class="p">,</span><span class="n">avatar</span><span class="p">,</span><span class="n">room_code</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">create_user</span><span class="p">(</span><span class="n">username</span><span class="p">,</span> <span class="n">avatar</span><span class="p">,</span> <span class="n">room_code</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Cette fonction permet de créer un utilisateur lorsqu&#39;il souhaite rejoindre une room</span>
+<span class="sd">    Cette fonction permet de créer un utilisateur lorsqu&#39;il souhaite rejoindre une room.</span>
 <span class="sd">    </span>
 <span class="sd">    :param username: nom d&#39;utilisateur</span>
 <span class="sd">    :param avatar: lien vers l&#39;image de l&#39;avatar choisi</span>
 <span class="sd">    :param room_code: code de la room à rejoindre</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Vérification de l&#39;existance de la room que l&#39;utilisateur souhaite rejoindre</span>
-    <span class="k">if</span> <span class="n">verify_exist_room_code</span><span class="p">(</span><span class="n">room_code</span><span class="p">):</span>
-        <span class="n">user_document</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ObjectId</span><span class="p">()),</span>
-            <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
-            <span class="s2">&quot;avatar&quot;</span><span class="p">:</span> <span class="n">avatar</span><span class="p">,</span>
-            <span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room_code</span>   
-        <span class="p">}</span>
-        <span class="c1"># Insertion en base de données</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">users_collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">user_document</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors de l&#39;insertion du document: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">else</span> <span class="p">:</span> 
+    <span class="c1"># Vérification de l&#39;existence de la room</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">verify_exist_room_code</span><span class="p">(</span><span class="n">room_code</span><span class="p">):</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;La room que vous tentez de rejoindre n&#39;existe pas.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Vérification si le username est déjà utilisé dans cette room</span>
+    <span class="n">existing_user</span> <span class="o">=</span> <span class="n">users_collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room_code</span><span class="p">,</span> <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">existing_user</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Le nom d&#39;utilisateur &#39;</span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2">&#39; est déjà pris dans cette room. Veuillez en choisir un autre.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="c1"># Si le nom d&#39;utilisateur est disponible, création de l&#39;utilisateur</span>
+    <span class="n">user_document</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;_id&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">ObjectId</span><span class="p">()),</span>
+        <span class="s2">&quot;username&quot;</span><span class="p">:</span> <span class="n">username</span><span class="p">,</span>
+        <span class="s2">&quot;avatar&quot;</span><span class="p">:</span> <span class="n">avatar</span><span class="p">,</span>
+        <span class="s2">&quot;room_code&quot;</span><span class="p">:</span> <span class="n">room_code</span>   
+    <span class="p">}</span>
+
+    <span class="c1"># Insertion en base de données</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">users_collection</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">user_document</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;L&#39;utilisateur </span><span class="si">{</span><span class="n">username</span><span class="si">}</span><span class="s2"> a été créé avec succès dans la room </span><span class="si">{</span><span class="n">room_code</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Erreur lors de l&#39;insertion du document: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
     <span class="k">return</span> <span class="n">user_document</span><span class="p">[</span><span class="s2">&quot;_id&quot;</span><span class="p">]</span></div>
 
 </pre></div>
