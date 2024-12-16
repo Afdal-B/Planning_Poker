@@ -30,6 +30,7 @@ jobs:
         source venv/bin/activate 
         pip install --upgrade pip
         pip install -r requirements.txt
+        pip install sphinxcontrib-apidoc
     
     - name: Set PYTHONPATH
       run: echo "PYTHONPATH=$(pwd)/server" >> $GITHUB_ENV ##Définit une variable d'environnement PYTHONPATH pour inclure le répertoire 'server'
