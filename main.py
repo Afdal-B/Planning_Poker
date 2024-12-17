@@ -58,7 +58,7 @@ def join_room_route():
     # Appel de la fonction pour l'envoi en base de données
     user_id = create_user(username, avatar, room_code)
 
-    return jsonify({"user_id":user_id})
+    return jsonify({"user_id":user_id, "room_code":room_code})
 
 @app.route('/<round_id>/vote', methods = ['GET', 'POST'])
 def vote_round_route(round_id):
@@ -75,7 +75,7 @@ def vote_round_route(round_id):
     # Appel de la fonction pour l'envoi en base de données
     vote_for_task_in_round(round_id, user_id, vote_value)
 
-    return 'Hello, World!'
+    return
 
 @app.route('/export_backlog', methods = ['GET', 'POST'])
 def export_backlog_route():

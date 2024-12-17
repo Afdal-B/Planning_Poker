@@ -5,6 +5,7 @@ Ce module regroupe l'ensemble des fonctions permettant d'intéragir avec les rou
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient
 from datetime import datetime
+from .backlog import next_task
 
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']
@@ -13,8 +14,6 @@ db = client['planning_poker']
 rooms_collection = db['rooms']
 tasks_collection = db['tasks']
 rounds_collection = db['rounds']
-users_collection = db['users']
-messages_collection = db['messages']
 
 def create_round(task_id, room_code, timer):
     """
@@ -70,7 +69,7 @@ def vote_for_task_in_round(round_id: str, user_id: str, vote_value: str) -> dict
     new_vote = {
         "user_id": user_id,
         "vote": vote_value,
-        "voted_at": datetime.now()  # Ajout de la date et heure du vote
+        "voted_at": datetime.now()
     }
     
     # Mise à jour de la collection "rounds" avec le nouveau vote
@@ -115,8 +114,7 @@ def get_votes_for_task_in_round(round_id: str) -> dict:
     
     return results
 
-# En cours de développement : ajouter la vérification du nombre d'utilisateurs ayant votés
-def partie_stricte(round_id) -> bool:
+def strict_round(round_id) -> bool:
     """
     Cette fonction permet de valider ou non un round joué en partie strict
 
@@ -126,11 +124,53 @@ def partie_stricte(round_id) -> bool:
     """
     
     votes = list(get_votes_for_task_in_round(round_id).values())
-    # Conversion des votes en entier
-    if ("café" not in votes):
-        votes = [int(value) for value in votes]
 
-        # Vérification qu'il n'y a qu'un seul élément unique
-        return len(set(votes)) == 1
-    else :
-        return False
+    # Vérification qu'il n'y a qu'un seul élément unique
+    return len(set(votes)) == 1
+
+def coffee_break(round_id) -> bool:
+    """
+    Cette fonction permet de déterminer si tous les utilisateurs ont voté pour une pause café
+
+    :param round_id: l'identifiant du round
+    :return : Vrai pour partir en pause café, faux sinon
+    
+    """
+    
+    votes = list(get_votes_for_task_in_round(round_id).values())
+
+    # La même valeur est choisie par tout les utilisateurs et celle-ci est "café"
+    return (len(set(votes)) == 1 and votes[0] == "café")
+
+def reveal_votes(round_id, room_code):
+    """
+    Cette fonction permet de jouer une partie à partir
+    """
+    game_rule = rooms_collection.find_one(
+        {"room_code": room_code}, 
+        {"game_rule": 1, "_id": 0} # inclure uniquement game_rule
+    )
+
+    # Pause café
+    if coffee_break(round_id):
+        return "coffee break"
+    
+    # Partie stricte
+    if game_rule == "strict" :
+        strict_round(round_id)
+    elif game_rule == "mean":
+        # Fonction moyenne
+        return 
+
+    # Chercher la prochaine tâche
+    task = next_task(room_code)
+
+    # Si il n'y pas de prochaine tâche la partie est terminée, sinon renvoyer la tâche
+    if task is None :
+        return 
+    else : 
+        return task
+
+    
+
+    

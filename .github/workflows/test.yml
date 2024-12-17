@@ -46,8 +46,7 @@ jobs:
 
     - name: Génère la documentation dans le dossier docs
       run: |
-        cd server  
-        sphinx-apidoc -o docs ./functions  
+        sphinx-apidoc -o docs server/functions  
 
     - name: Relance la création des fichiers HTML
       run: |
