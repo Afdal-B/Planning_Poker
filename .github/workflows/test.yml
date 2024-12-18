@@ -6,7 +6,7 @@ name: Run Tests
 on: #Définition des événements qui déclenchent ce workflow
   push: #Ce workflow s'exécute à chaque push sur la branche main 
     branches: 
-      - main
+      - Backlog-functionnalities
   pull_request: #Ou à chaque ouverture d'une pull request
     branches:
       - main
