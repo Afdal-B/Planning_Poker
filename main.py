@@ -57,6 +57,7 @@ def join_room_route():
 
     # Appel de la fonction pour l'envoi en base de données
     user_id = create_user(username, avatar, room_code)
+    print(user_id)
 
     return jsonify({"user_id":user_id, "room_code":room_code})
 

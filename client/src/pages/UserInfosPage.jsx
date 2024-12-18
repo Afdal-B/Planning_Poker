@@ -36,11 +36,11 @@ const UserInfosPage = () => {
     axios
       .post(`${API_URL}/join_room`, data, config) // utilisation des templates strings
       .then((response) => {
-        const { room_id, user_id } = response.data; // destructuration de response.data
-        console.log(`Room ID: ${room_id}, User ID: ${user_id}`);
+        const { room_code, user_id } = response.data; // destructuration de response.data
+        console.log(`Room code: ${room_code}, User ID: ${user_id}`);
 
         // Enregistrement dans le localStorage
-        localStorage.setItem("room_id", room_id);
+        localStorage.setItem("room_code", room_code);
         localStorage.setItem("user_id", user_id);
       })
       .catch((error) => {
