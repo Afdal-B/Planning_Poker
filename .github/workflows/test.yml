@@ -57,14 +57,16 @@ jobs:
         source venv/bin/activate 
         cd server/docs  
         make html
+        
     - name: Commit and push documentation #Commit et pousse la documentation générée vers le dépôt Git
       env:
-        GITHUB_TOKEN: ${{ secrets.P_A_T }}  #Définit la variable d'environnement GITHUB_TOKEN qui est un jeton d'accès personnel stocké dans les secrets du dépôt
+        GITHUB_TOKEN: ${{ secrets.P_A_T }}  #Définit la variable d'environnement GITHUB_TOKEN
       run: |
         cd server
         git config --local user.email "aithassouelias@gmail.com"
         git config --local user.name "aithassouelias"
-        git pull
+        git pull --rebase origin main  # Récupère les dernières modifications avec rebase
         git add docs/
         git commit -m "Mise à jour de la documentation Back-end"
-        git push https://x-access-token:${GITHUB_TOKEN}@github.com/Afdal-B/Planning_Poker.git HEAD:main      
+        git push https://x-access-token:${GITHUB_TOKEN}@github.com/Afdal-B/Planning_Poker.git HEAD:main
+    
