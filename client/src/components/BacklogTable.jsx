@@ -1,31 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Check } from "lucide-react";
 
-const BacklogTable = () => {
-  const backlogItems = [
-    {
-      id: "01",
-      checked: true,
-      actor: "User",
-      feature: "Create an account",
-      goal: "Access the platform",
-    },
-    {
-      id: "02",
-      checked: false,
-      actor: "User",
-      feature: "Create an account",
-      goal: "Access the platform",
-    },
-    // Add more items as needed
-  ];
+const BacklogTable = ({ backlogItems: initialBacklogItems }) => {
+  const [backlogItems, setBacklogItems] = useState(initialBacklogItems || []);
+
+  const toggleCheck = (id) => {
+    setBacklogItems(
+      backlogItems.map((item) =>
+        item.id === id ? { ...item, checked: !item.checked } : item
+      )
+    );
+  };
 
   return (
     <div className="mt-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Backlog items</h2>
         <span className="text-gray-600">
-          Total <span className="text-blue-500">10</span> items
+          Total <span className="text-blue-500">{backlogItems.length}</span>{" "}
+          items
         </span>
       </div>
       <div className="overflow-x-auto">
@@ -44,7 +37,10 @@ const BacklogTable = () => {
             {backlogItems.map((item) => (
               <tr key={item.id} className="border-b hover:bg-gray-50">
                 <td className="p-4">
-                  <div className="w-5 h-5 border rounded flex items-center justify-center">
+                  <div
+                    onClick={() => toggleCheck(item.id)}
+                    className="w-5 h-5 border rounded flex items-center justify-center cursor-pointer hover:bg-gray-100"
+                  >
                     {item.checked && (
                       <Check size={16} className="text-blue-500" />
                     )}

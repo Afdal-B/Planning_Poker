@@ -1,17 +1,6 @@
 import React from "react";
 
-const MembersList = () => {
-  const members = [
-    {
-      id: 1,
-      name: "Adam Murphy",
-      avatar:
-        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-      status: "Joined room",
-    },
-    // Add more members as needed
-  ];
-
+const MembersList = ({ members }) => {
   return (
     <div className="p-4 border-l w-80">
       <h3 className="font-semibold mb-4">Members</h3>
@@ -25,7 +14,7 @@ const MembersList = () => {
             />
             <div>
               <p className="font-medium">{member.name}</p>
-              <p className="text-sm text-gray-500">{member.status}</p>
+              <p className="text-sm text-gray-500">Joined</p>
             </div>
           </div>
         ))}

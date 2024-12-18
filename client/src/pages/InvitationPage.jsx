@@ -1,12 +1,18 @@
 import React from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Button from "../components/Button";
 const InvitationPage = () => {
   const code = localStorage.getItem("room_code");
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(code);
+  };
+
   return (
     <div>
       <Header></Header>
-      <div className="flex items-center justify-center bg-gray-100">
+      <div className="flex items-center justify-center bg-gray-100 min-h-[80vh]">
         <div className="w-[600px] bg-gray-100 rounded-lg shadow-lg p-6 m-6">
           <h2 className="text-lg font-semibold text-gray-700 text-center mb-6">
             Invite your team to your room!
@@ -22,10 +28,17 @@ const InvitationPage = () => {
                 readOnly
                 className="w-full px-3 py-2 border border-gray-300 bg-white rounded-l-md text-gray-700 focus:outline-none"
               />
-              <button className="px-4 py-2 bg-[#378C9FFF] text-white rounded-r-md hover:bg-teal-600">
+              <button
+                onClick={handleCopy}
+                className="px-4 py-2 bg-[#378C9FFF] text-white rounded-r-md hover:bg-teal-600"
+              >
                 Copy
               </button>
             </div>
+          </div>
+
+          <div className="flex justify-center">
+            <Button text={"Join"} page={"/voting"}></Button>
           </div>
 
           {/* Section "Share this link" */}

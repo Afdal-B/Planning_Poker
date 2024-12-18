@@ -5,6 +5,7 @@ import UserInfosPage from "./pages/UserInfosPage";
 import InvitationPage from "./pages/InvitationPage";
 import VotingPage from "./pages/VotingPage";
 import { Routes, Route, BrowserRouter } from "react-router";
+import VotingPageUser from "./pages/VotingPageUser";
 export default function App() {
   return (
     <div>
@@ -16,6 +17,7 @@ export default function App() {
           <Route path="/profile" element={<UserInfosPage />} />
           <Route path="/invitation" element={<InvitationPage />} />
           <Route path="/voting" element={<VotingPage />} />
+          <Route path="/voting-page-user" element={<VotingPageUser />} />
         </Routes>
       </BrowserRouter>
     </div>
