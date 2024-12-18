@@ -33,7 +33,7 @@ const UserInfosPage = () => {
       room_code: code,
     });
     console.log(data);
-    axios.post(API_URL + "/join_room", data,config);
+    axios.post(API_URL + "/join_room", config);
   };
   return (
     <div>
