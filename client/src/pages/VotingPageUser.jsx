@@ -16,6 +16,24 @@ const VotingPageUser = () => {
     },
   };
 
+  const fetchCurrentFeature = () => {
+    try {
+      axios
+        .post(
+          API_URL + "/round",
+          JSON.stringify({ room_code: localStorage.getItem("room_code") }),
+          config
+        )
+        .then((response) => {
+          console.log(response.data.feature);
+          localStorage.setItem("round_id", response.data.room_id);
+          setFeature(response.data.task);
+        });
+    } catch (error) {
+      console.error("Erreur lors de la récupération de la feature:", error);
+    }
+  };
+
   useEffect(() => {
     const fetchMembers = () => {
       try {
@@ -34,24 +52,6 @@ const VotingPageUser = () => {
       }
     };
 
-    const fetchCurrentFeature = () => {
-      try {
-        axios
-          .post(
-            API_URL + "/round",
-            JSON.stringify({ room_code: localStorage.getItem("room_code") }),
-            config
-          )
-          .then((response) => {
-            console.log(response.data.feature);
-            localStorage.setItem("round_id", response.data.room_id);
-            setFeature(response.data.task);
-          });
-      } catch (error) {
-        console.error("Erreur lors de la récupération de la feature:", error);
-      }
-    };
-
     fetchMembers();
     fetchCurrentFeature();
   }, []);
@@ -60,12 +60,20 @@ const VotingPageUser = () => {
       <div className="flex h-screen">
         <div className="flex-1 flex flex-col">
           <div className="p-6 flex-1 overflow-auto">
-            <FeatureListItem
-              number={""}
-              actor={feature.en_tant_que || ""}
-              feature={feature.fonctionnalite || ""}
-              goal={feature.objectif || ""}
-            />
+            <div className="flex justify-between items-center mb-4">
+              <FeatureListItem
+                number={""}
+                actor={feature.en_tant_que || ""}
+                feature={feature.fonctionnalite || ""}
+                goal={feature.objectif || ""}
+              />
+              <button
+                onClick={fetchCurrentFeature}
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              >
+                Next Feature
+              </button>
+            </div>
           </div>
           <div className="flex gap-6 p-6 border-t">
             <Card number="1" />
