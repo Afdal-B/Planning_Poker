@@ -8,6 +8,7 @@ from datetime import datetime
 from .rooms import get_users_in_room
 from .backlog import next_task, add_estimation_task
 
+
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']
 
