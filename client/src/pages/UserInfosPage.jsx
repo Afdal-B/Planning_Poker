@@ -33,7 +33,22 @@ const UserInfosPage = () => {
       room_code: code,
     });
     console.log(data);
-    axios.post(API_URL + "/join_room", data,config);
+    axios
+      .post(`${API_URL}/join_room`, data, config) // utilisation des templates strings
+      .then((response) => {
+        const { room_id, user_id } = response.data; // destructuration de response.data
+        console.log(`Room ID: ${room_id}, User ID: ${user_id}`);
+
+        // Enregistrement dans le localStorage
+        localStorage.setItem("room_id", room_id);
+        localStorage.setItem("user_id", user_id);
+      })
+      .catch((error) => {
+        console.error(
+          "Erreur lors de la connexion à la room :",
+          error.message || error
+        );
+      });
   };
   return (
     <div>
