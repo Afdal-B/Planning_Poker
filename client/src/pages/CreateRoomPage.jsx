@@ -11,6 +11,20 @@ const CreateRoomPage = () => {
   const [jsonFile, setJsonFile] = useState(null);
   const [pseudo, setPseudo] = useState("");
   const [avatar, setAvatar] = useState("");
+  const [selectedAvatar, setSelectedAvatar] = useState(null);
+
+  const avatars = [
+    {
+      id: 1,
+      src: "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.disneystore.fr%2Fpersonnages-et-films%2Fpersonnages&psig=AOvVaw1nMCi5CsI7v2fFTMPdXvwe&ust=1734110133091000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCMCRoujdoooDFQAAAAAdAAAAABAR",
+      alt: "Avatar 1",
+    },
+    { id: 2, src: "https://via.placeholder.com/100", alt: "Avatar 2" },
+    { id: 3, src: "https://via.placeholder.com/100", alt: "Avatar 3" },
+    { id: 4, src: "https://via.placeholder.com/100", alt: "Avatar 4" },
+    { id: 5, src: "https://via.placeholder.com/100", alt: "Avatar 5" },
+  ];
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -82,17 +96,29 @@ const CreateRoomPage = () => {
             />
           </div>
 
-          <div className="mb-4">
+          <div className="w-full max-w-sm mt-6 mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Avatar
+              Choose your avatar
             </label>
-            <input
-              type="text"
-              value={avatar}
-              onChange={(e) => setAvatar(e.target.value)}
-              placeholder="avatar"
-              className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <div className="flex space-x-4">
+              {avatars.map((avatar) => (
+                <button
+                  key={avatar.id}
+                  onClick={() => setSelectedAvatar(avatar.id)}
+                  className={`rounded-full border-2 ${
+                    selectedAvatar === avatar.id
+                      ? "border-blue-500"
+                      : "border-transparent"
+                  }`}
+                >
+                  <img
+                    src="https://cdn.pixabay.com/photo/2018/12/03/08/45/snow-3852960_1280.jpg"
+                    alt={avatar.alt}
+                    className="w-16 h-16 rounded-full"
+                  />
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Game Rule */}

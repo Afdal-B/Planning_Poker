@@ -2,10 +2,12 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FormButton from "../components/FormButton";
+import { API_URL } from "../constants/constants";
+import axios from "axios";
 const UserInfosPage = () => {
   const [displayName, setDisplayName] = useState("");
   const [selectedAvatar, setSelectedAvatar] = useState(null);
-
+  const [code, setCode] = useState("");
   const avatars = [
     {
       id: 1,
@@ -17,16 +19,42 @@ const UserInfosPage = () => {
     { id: 4, src: "https://via.placeholder.com/100", alt: "Avatar 4" },
     { id: 5, src: "https://via.placeholder.com/100", alt: "Avatar 5" },
   ];
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
 
+    const data = JSON.stringify({
+      username: displayName,
+      avatar: selectedAvatar,
+      room_code: code,
+    });
+    console.log(data);
+    axios.post(API_URL + "/join_room", config);
+  };
   return (
     <div>
       <Header></Header>
       <div className="flex items-center justify-center h-[80vh] bg-[#F8F9FAFF]">
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="flex flex-col items-center p-6">
-            <h1 className="text-2xl font-bold mb-6 font-archivo">
-              Customize Your Profile
-            </h1>
+            <h1 className="text-2xl font-bold mb-6 font-archivo">Join Room</h1>
+            <div className="w-full max-w-sm">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Please enter the code provided to you
+              </label>
+              <input
+                type="text"
+                placeholder="XUS-K63"
+                className="w-full px-4 py-2 mb-6 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+              />
+            </div>
+
             <div className="w-full max-w-sm">
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Choose your display name
@@ -64,7 +92,7 @@ const UserInfosPage = () => {
               </div>
             </div>
 
-            <FormButton text={"Continue"}></FormButton>
+            <FormButton text={"Join"}></FormButton>
           </div>
         </form>
       </div>
