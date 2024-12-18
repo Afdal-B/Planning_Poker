@@ -205,7 +205,6 @@ def reveal_votes(round_id, room_code):
         {"room_code": room_code}, 
         {"game_rule": 1, "_id": 0} # inclure uniquement game_rule
     )
-
     # Pause café
     if coffee_break(round_id):
         return "coffee break"
@@ -226,4 +225,3 @@ def reveal_votes(round_id, room_code):
         return 
     else : 
         return task
-    
