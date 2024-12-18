@@ -151,7 +151,8 @@ const CreateRoomPage = () => {
             >
               <option value="">Select a rule</option>
               <option value="strict">Strict</option>
-              <option value="moyenne">Moyenne</option>
+              <option value="mean">Moyenne</option>
+              <option value="median">médiane</option>
             </select>
           </div>
 

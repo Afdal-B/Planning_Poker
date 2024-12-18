@@ -11,9 +11,9 @@ const VotingPageUser = () => {
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
-    const fetchMembers = async () => {
+    const fetchMembers = () => {
       try {
-        const response = await axios.post(
+        const response = axios.post(
           API_URL + "/members",
           JSON.stringify({ room_code: localStorage.getItem("room_code") })
         );

@@ -9,9 +9,9 @@ const VotingPage = () => {
   const [members, setMembers] = useState([]);
 
   useEffect(() => {
-    const fetchBacklog = async () => {
+    const fetchBacklog = () => {
       try {
-        const response = await axios.post(
+        const response = axios.post(
           API_URL + "/backlog",
           JSON.stringify({ room_code: localStorage.getItem("room_code") })
         );
@@ -21,9 +21,9 @@ const VotingPage = () => {
       }
     };
 
-    const fetchMembers = async () => {
+    const fetchMembers = () => {
       try {
-        const response = await axios.post(
+        const response = axios.post(
           API_URL + "/users",
           JSON.stringify({ room_code: localStorage.getItem("room_code") })
         );
