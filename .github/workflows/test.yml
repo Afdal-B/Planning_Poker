@@ -54,5 +54,6 @@ jobs:
 
     - name: Relance la création des fichiers HTML
       run: |
+        source venv/bin/activate 
         cd server/docs  
         make html
