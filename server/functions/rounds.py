@@ -137,6 +137,7 @@ def strict_round(round_id, room_code) -> bool:
     else : 
         return 
 
+
 def mean_round(round_id) -> int:
     """
     Cette fonction permet de valider ou non un round joué en partie moyenne
