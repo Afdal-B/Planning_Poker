@@ -22,7 +22,9 @@ def send_message(data):
     :param data: Un dictionnaire contenant les informations du message.
     :return: Un message de confirmation ou d'erreur.
     """
-    room_id = data.get('room_id')
+    room_code = data.get('room_code')
+    #on récupère le room_id à partir du room_code
+    room_id = rooms_collection.find_one({"room_code": room_code}).get("_id")
     user_id = data.get('user_id')
     content = data.get('content')
 
@@ -106,14 +108,16 @@ def add_reaction(data):
     return {"message": "Reaction added successfully"}, 200
 
 #Définition de la fonction de la récupération des messages
-def fetch_chat_history(room_id):
+def fetch_chat_history(room_code):
     """
     Cette fonction permet de récupérer l'historique des messages d'une room spécifique.
 
-    :param room_id: L'ID de la room.
+    :param room_code: Le code de la room.
     :return: Un dictionnaire contenant la liste des messages et les réactions ou un message d'erreur.
     """
-    
+    #on récupère le room_id à partir du room_code
+    room_id = rooms_collection.find_one({"room_code": room_code}).get("_id")
+
     if not room_id:
         return {"error": "room_id is required"}, 400
     if not ObjectId.is_valid(room_id):

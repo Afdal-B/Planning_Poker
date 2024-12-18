@@ -16,15 +16,16 @@ const VotingPage = () => {
   useEffect(() => {
     const fetchBacklog = () => {
       try {
-        axios.post(
-                API_URL + "/backlog",
-                JSON.stringify({ room_code: localStorage.getItem("room_code") }), config
-              )
-              .then((response) => {
-                 console.log(response.data.tasks)
-                ;
-                setItems(response.data.tasks); })
-        
+        axios
+          .post(
+            API_URL + "/backlog",
+            JSON.stringify({ room_code: localStorage.getItem("room_code") }),
+            config
+          )
+          .then((response) => {
+            console.log(response.data.tasks);
+            setItems(response.data.tasks);
+          });
       } catch (error) {
         console.error("Erreur lors de la récupération du backlog:", error);
       }
@@ -32,17 +33,18 @@ const VotingPage = () => {
 
     const fetchMembers = () => {
       try {
-        axios.post(
-                API_URL + "/users",
-                JSON.stringify({ room_code: localStorage.getItem("room_code") }), config
-              )
-              .then((response) => {
-                 console.log(response.data.users)
-                ;
-                setMembers(response.data.users); })
-        
+        axios
+          .post(
+            API_URL + "/users",
+            JSON.stringify({ room_code: localStorage.getItem("room_code") }),
+            config
+          )
+          .then((response) => {
+            console.log(response.data.users);
+            setMembers(response.data.users);
+          });
       } catch (error) {
-        console.error("Erreur lors de la récupération du backlog:", error);
+        console.error("Erreur lors de la récupération des users:", error);
       }
     };
 
