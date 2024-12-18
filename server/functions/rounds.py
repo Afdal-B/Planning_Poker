@@ -145,16 +145,23 @@ def mean_round(round_id) -> int:
     :return : l'estimation de la tache.
     
     """
-    #On fait le premier round en mode stricte 
+    # On fait le premier round en mode stricte 
     strict_round(round_id)
-    #On vérifie si le round est validé (la fonction strict_round va renvoyer l'estimation directement si le round a été validé)
+    # On vérifie si le round est validé (la fonction strict_round va renvoyer l'estimation directement si le round a été validé)
     if strict_round(round_id):
         return strict_round(round_id)
     else:
-        #On recupère les votes et on fait la moyenne
+        # On recupère les votes et on fait la moyenne
         votes = list(get_votes_for_task_in_round(round_id).values())
-        #On fait la moyenne puis on arrondi au supérieur pour avoir un entier 
-        return round(sum(votes)/len(votes))
+        # Vérifier si "coffee" est dans les votes
+        if "coffee" in votes:
+            return {"error": "Vote 'coffee' détecté, estimation non calculée"}
+        # Convertir les votes en entiers
+        votes = [int(vote) for vote in votes]
+        # On fait la moyenne puis on arrondi au supérieur pour avoir un entier 
+        estimation= round(sum(votes) / len(votes))
+        add_estimation_task(round_id,estimation)
+        return estimation
 
 def median_round(round_id) -> int:
     """
@@ -164,17 +171,24 @@ def median_round(round_id) -> int:
     :return : l'estimation de la tache.
     
     """
-    #On fait le premier round en mode stricte 
+    # On fait le premier round en mode stricte 
     strict_round(round_id)
-    #On vérifie si le round est validé (la fonction strict_round va renvoyer l'estimation directement si le round a été validé)
+    # On vérifie si le round est validé (la fonction strict_round va renvoyer l'estimation directement si le round a été validé)
     if strict_round(round_id):
         return strict_round(round_id)
     else:
-        #On recupère les votes et on fait la moyenne
+        # On recupère les votes et on fait la moyenne
         votes = list(get_votes_for_task_in_round(round_id).values())
+        # Vérifier si "coffee" est dans les votes
+        if "coffee" in votes:
+            return {"error": "Vote 'coffee' détecté, estimation non calculée"}
+        # Convertir les votes en entiers
+        votes = [int(vote) for vote in votes]
         votes.sort()
-        return votes[len(votes)//2]
-    
+        estimation= votes[len(votes)//2]
+        add_estimation_task(round_id,estimation)
+        return estimation
+
 
 def coffee_break(round_id) -> bool:
     """
@@ -198,7 +212,6 @@ def reveal_votes(round_id, room_code):
         {"room_code": room_code}, 
         {"game_rule": 1, "_id": 0} # inclure uniquement game_rule
     )
-
     # Pause café
     if coffee_break(round_id):
         return "coffee break"
@@ -219,6 +232,3 @@ def reveal_votes(round_id, room_code):
         return 
     else : 
         return task
-
-    
-

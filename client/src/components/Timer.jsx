@@ -1,64 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { Timer as TimerIcon, Settings } from "lucide-react";
-import SetTimerModal from "./SetTimerModal";
+import React, { useEffect, useState } from "react";
+import { io } from "socket.io-client";
+
+const socket = io("http://localhost:5000"); // Connexion au serveur Flask-SocketIO
 
 const Timer = () => {
-  const [timeLeft, setTimeLeft] = React.useState(0);
-  const [isRunning, setIsRunning] = React.useState(false);
-  const [showModal, setShowModal] = React.useState(false);
+  const [time, setTime] = useState(0);
 
   useEffect(() => {
-    let interval;
-    if (isRunning && timeLeft > 0) {
-      interval = setInterval(() => setTimeLeft((t) => t - 1), 1000);
-    } else if (timeLeft === 0) {
-      setIsRunning(false);
-    }
-    return () => clearInterval(interval);
-  }, [isRunning, timeLeft]);
+    // Écoute l'événement "update_time" pour recevoir le temps
+    socket.on("update_time", (data) => {
+      setTime(data.time);
+    });
 
-  const formatTime = (s) =>
-    `${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(
-      2,
-      "0"
-    )}`;
+    // Nettoyer l'écouteur à la déconnexion
+    return () => {
+      socket.off("update_time");
+    };
+  }, []);
+
+  // Formater le temps en MM:SS
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${String(minutes).padStart(2, "0")}:${String(
+      remainingSeconds
+    ).padStart(2, "0")}`;
+  };
 
   return (
-    <div className="flex flex-col items-center">
-      <div className="bg-white rounded-lg shadow p-3 w-[100px]">
-        <div className="flex justify-between items-center mb-1">
-          <TimerIcon className="text-teal-600" size={12} />
-          <button
-            onClick={() => setShowModal(true)}
-            className="text-gray-400 hover:text-gray-600"
-          >
-            <Settings size={10} />
-          </button>
-        </div>
-
-        <div className="text-2xl font-bold text-center mb-2 font-mono">
-          {formatTime(timeLeft)}
-        </div>
-
-        <button
-          onClick={() => {
-            timeLeft === 0 ? setShowModal(true) : setIsRunning(!isRunning);
-          }}
-          className={`w-full py-1 rounded text-white text-xs font-medium transition-colors ${
-            isRunning
-              ? "bg-red-500 hover:bg-red-600"
-              : "bg-teal-600 hover:bg-teal-700"
-          }`}
-        >
-          {isRunning ? "Stop" : timeLeft === 0 ? "Set Timer" : "Start"}
-        </button>
-      </div>
-
-      <SetTimerModal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        onSetTimer={(m, s) => setTimeLeft(m * 60 + s)}
-      />
+    <div className="flex items-center justify-center bg-gray-800 text-white p-4 rounded-md shadow-md">
+      <h1 className="text-3xl font-mono font-semibold">{formatTime(time)}</h1>
     </div>
   );
 };
