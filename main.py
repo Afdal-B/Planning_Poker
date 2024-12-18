@@ -2,7 +2,7 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
-from server.functions.rooms import create_room
+from server.functions.rooms import create_room, get_users_in_room
 from server.functions.users import create_user
 from server.functions.backlog import export_backlog_to_json, get_all_tasks
 from server.functions.rounds import vote_for_task_in_round
@@ -77,10 +77,26 @@ def vote_round_route(round_id):
 
     return
 
+@app.route('/users', methods = ['GET', 'POST'])
+def users_route():
+    """
+    Cette route permet d'afficher toutes les tâches du backlog'
+    """
+    # Récupération des données envoyées depuis le front-end
+    data = request.get_json()
+
+    # Récupération des autres informations du formulaire
+    room_code = data.get('room_code')
+
+    # Appel de la fonction pour l'envoi en base de données
+    users = get_users_in_room(room_code)
+
+    return jsonify({"users": users})
+
 @app.route('/backlog', methods = ['GET', 'POST'])
 def backlog_route():
     """
-    Cette route permet de récupérer le room code et l'afficher sur le front-end pour que le créateur de la room puisse le partager
+    Cette route permet d'afficher toutes les tâches du backlog'
     """
     # Récupération des données envoyées depuis le front-end
     data = request.get_json()
