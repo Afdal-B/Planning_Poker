@@ -9,21 +9,51 @@ import { useState, useEffect } from "react";
 import { API_URL } from "../constants/constants";
 const VotingPageUser = () => {
   const [members, setMembers] = useState([]);
+  const [feature, setFeature] = useState({});
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
 
   useEffect(() => {
     const fetchMembers = () => {
       try {
-        const response = axios.post(
-          API_URL + "/members",
-          JSON.stringify({ room_code: localStorage.getItem("room_code") })
-        );
-        setMembers(response.data);
+        axios
+          .post(
+            API_URL + "/users",
+            JSON.stringify({ room_code: localStorage.getItem("room_code") }),
+            config
+          )
+          .then((response) => {
+            console.log(response.data.users);
+            setMembers(response.data.users);
+          });
       } catch (error) {
-        console.error("Erreur lors de la récupération des membres:", error);
+        console.error("Erreur lors de la récupération des users:", error);
+      }
+    };
+
+    const fetchCurrentFeature = () => {
+      try {
+        axios
+          .post(
+            API_URL + "/round",
+            JSON.stringify({ room_code: localStorage.getItem("room_code") }),
+            config
+          )
+          .then((response) => {
+            console.log(response.data.feature);
+            localStorage.setItem("round_id", response.data.room_id);
+            setFeature(response.data.task);
+          });
+      } catch (error) {
+        console.error("Erreur lors de la récupération de la feature:", error);
       }
     };
 
     fetchMembers();
+    fetchCurrentFeature();
   }, []);
   return (
     <div className="min-h-screen bg-white">
@@ -31,10 +61,10 @@ const VotingPageUser = () => {
         <div className="flex-1 flex flex-col">
           <div className="p-6 flex-1 overflow-auto">
             <FeatureListItem
-              number="03"
-              actor="User"
-              feature="Create an account"
-              goal="Acces the platform"
+              number={""}
+              actor={feature.en_tant_que || ""}
+              feature={feature.fonctionnalite || ""}
+              goal={feature.objectif || ""}
             />
           </div>
           <div className="flex gap-6 p-6 border-t">
