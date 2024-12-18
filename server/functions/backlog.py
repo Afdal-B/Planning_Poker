@@ -11,8 +11,8 @@ from pymongo.mongo_client import MongoClient
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']
 tasks_collection = db['tasks']
+rounds_collection = db['rounds']
 
-import pandas as pd
 
 def backlog_json_to_df(backlog_json) -> pd.DataFrame:
     """
@@ -156,7 +156,7 @@ def get_all_tasks(room_code):
     return tasks
 
 
-def add_estimation_task(task_id,value):
+def add_estimation_task(round_id,value):
     """
     Met à jour le champ 'estimation' d'une tâche spécifique après validation du vote
 
@@ -169,7 +169,8 @@ def add_estimation_task(task_id,value):
         None: Si aucun document correspondant n'a été trouvé.
     """
     try:
-        
+        round = rounds_collection.find_one({"round_id": round_id})
+        task_id = round.get("task_id")
         # Mise à jour de la tâche
         result = tasks_collection.find_one_and_update(
             {"_id": task_id},  # Filtre pour trouver la tâche
