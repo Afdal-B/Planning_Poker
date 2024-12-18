@@ -2,10 +2,12 @@ import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import json
+from time import time, sleep
+from threading import Thread
 from server.functions.rooms import create_room, get_users_in_room
 from server.functions.users import create_user
-from server.functions.backlog import export_backlog_to_json, get_all_tasks
-from server.functions.rounds import vote_for_task_in_round
+from server.functions.backlog import export_backlog_to_json, get_all_tasks, next_task
+from server.functions.rounds import vote_for_task_in_round, create_round
 from flask_socketio import SocketIO, emit, join_room
 from server.functions.chat import send_message, add_reaction, fetch_chat_history
 
@@ -57,7 +59,6 @@ def join_room_route():
 
     # Appel de la fonction pour l'envoi en base de données
     user_id = create_user(username, avatar, room_code)
-    print(user_id)
 
     return jsonify({"user_id":user_id, "room_code":room_code})
 
@@ -125,6 +126,55 @@ def export_backlog_route():
     #export_backlog_to_json(room_code)
 
     return 'Hello, World!'
+
+@app.route('/round', methods = ['GET', 'POST'])
+def display_round_route():
+    """
+    Cette route de créer un round
+    """
+    # Récupération des données envoyées depuis le front-end
+    data = request.get_json()
+
+    # Récupération des autres informations du formulaire
+    room_code = data.get('room_code')
+
+    # Appel de la fonction pour l'envoi en base de données
+    task = next_task(room_code)
+
+    round_id = create_round(task["_id"], room_code)
+
+    return jsonify({"round_id":round_id, "task":task})
+ 
+ 
+# Variables globales pour le chronomètre
+start_time = None
+is_running = False
+ 
+# Fonction pour diffuser le temps
+def send_timer():
+    global start_time, is_running
+    while is_running:
+        elapsed_time = time() - start_time
+        socketio.emit('update_time', {'time': int(elapsed_time)})  # Diffuser le temps en secondes
+        sleep(1)  # Mise à jour toutes les secondes
+
+ 
+@socketio.on("start_timer")
+def start_timer():
+    global start_time, is_running
+    if not is_running:
+        start_time = time()
+        is_running = True
+        thread = Thread(target=send_timer)
+        thread.start()
+        print("Chronomètre démarré.")
+ 
+@socketio.on("stop_timer")
+def stop_timer():
+    global is_running
+    is_running = False
+    print("Chronomètre arrêté.")
+
 
 # Route HTTP pour récupérer l'historique des messages d'une room
 @app.route('/chat/history/<room_id>', methods=['GET'])

@@ -7,15 +7,25 @@ import { API_URL } from "../constants/constants";
 const VotingPage = () => {
   const [items, setItems] = useState([]);
   const [members, setMembers] = useState([]);
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
 
   useEffect(() => {
     const fetchBacklog = () => {
       try {
-        const response = axios.post(
-          API_URL + "/backlog",
-          JSON.stringify({ room_code: localStorage.getItem("room_code") })
-        );
-        setItems(response.data);
+        axios
+          .post(
+            API_URL + "/backlog",
+            JSON.stringify({ room_code: localStorage.getItem("room_code") }),
+            config
+          )
+          .then((response) => {
+            console.log(response.data.tasks);
+            setItems(response.data.tasks);
+          });
       } catch (error) {
         console.error("Erreur lors de la récupération du backlog:", error);
       }
@@ -23,13 +33,18 @@ const VotingPage = () => {
 
     const fetchMembers = () => {
       try {
-        const response = axios.post(
-          API_URL + "/users",
-          JSON.stringify({ room_code: localStorage.getItem("room_code") })
-        );
-        setMembers(response.data);
+        axios
+          .post(
+            API_URL + "/users",
+            JSON.stringify({ room_code: localStorage.getItem("room_code") }),
+            config
+          )
+          .then((response) => {
+            console.log(response.data.users);
+            setMembers(response.data.users);
+          });
       } catch (error) {
-        console.error("Erreur lors de la récupération des membres:", error);
+        console.error("Erreur lors de la récupération des users:", error);
       }
     };
 

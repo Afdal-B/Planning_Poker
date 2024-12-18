@@ -13,7 +13,7 @@ const MembersList = ({ members }) => {
               className="w-10 h-10 rounded-full"
             />
             <div>
-              <p className="font-medium">{member.name}</p>
+              <p className="font-medium">{member.username}</p>
               <p className="text-sm text-gray-500">Joined</p>
             </div>
           </div>
