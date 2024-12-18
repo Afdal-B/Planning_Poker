@@ -112,3 +112,73 @@ def upload_backlog(backlog_df, room_code)->list:
                 print(f"Erreur lors de l'insertion du document: {e}")
         return task_ids
     return []
+
+def next_task(room_code):
+    """
+    Récupère la prochaine tâche sans estimation pour une room spécifique, triée par ordre alphabétique
+    du champ 'fonctionnalite'.
+
+    :param room_code (str): Code de la room.
+
+    Returns:
+        dict: La tâche trouvée ou None si aucune tâche correspondante.
+    """
+
+    # Requête pour trouver la première tâche sans estimation pour la room
+    task = tasks_collection.find_one(
+        {
+            "room_code": room_code,   
+            "estimation": None      
+        },
+        sort=[("fonctionnalite", 1)]  # Tri par ordre alphabétique pour s'assurer de l'ordre de renvoi des tâches
+    )
+
+    return task
+
+
+def get_all_tasks(room_code):
+    """
+    Récupère toutes les tâches pour une room spécifique, sans tri.
+
+    :param room_code (str): Code de la room.
+
+    Returns:
+        list: Une liste de toutes les tâches correspondant aux critères.
+    """
+
+    # Requête pour trouver toutes les tâches pour la room
+    tasks = list(tasks_collection.find(
+        {
+            "room_code": room_code
+        }
+    ))
+
+    return tasks
+
+
+def add_estimation_task(task_id,value):
+    """
+    Met à jour le champ 'estimation' d'une tâche spécifique après validation du vote
+
+    
+    :param value: La valeur de l'estimation à ajouter
+    :param task_id: L'identifiant unique de la tâche dans MongoDB
+
+    Returns:
+        dict: Le document mis à jour s'il a été trouvé et modifié.
+        None: Si aucun document correspondant n'a été trouvé.
+    """
+    try:
+        
+        # Mise à jour de la tâche
+        result = tasks_collection.find_one_and_update(
+            {"_id": task_id},  # Filtre pour trouver la tâche
+            {"$set": {"estimation": value}},  # Mise à jour du champ estimation
+            return_document=True  # Retourne le document mis à jour
+        )
+        return result  # Retourne la tâche mise à jour ou None si non trouvée
+
+    except Exception as e:
+        print(f"Erreur lors de la mise à jour de la tâche : {e}")
+        return None
+    
