@@ -81,7 +81,7 @@ def get_users_in_room(room_code: str) -> dict:
     Récupère tous les utilisateurs ayant rejoint une salle spécifique via un code room.
     
     :param room_code: Le code unique de la room.
-    :return: Un dictionnaire contenant la liste des utilisateurs ou un message d'erreur.
+    :return: La liste des utilisateurs ou un message d'erreur.
     """
     
     # Recherche de la room correspondante

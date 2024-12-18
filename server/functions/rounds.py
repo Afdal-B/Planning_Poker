@@ -5,6 +5,7 @@ Ce module regroupe l'ensemble des fonctions permettant d'intéragir avec les rou
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient
 from datetime import datetime
+from .rooms import get_users_in_room
 from .backlog import next_task, add_estimation_task
 
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
@@ -111,22 +112,27 @@ def get_votes_for_task_in_round(round_id: str) -> dict:
     
     return results
 
-def strict_round(round_id) -> bool:
+def strict_round(round_id, room_code) -> bool:
     """
     Cette fonction permet de valider ou non un round joué en partie strict
 
     :param round_id: l'identifiant du round
+    :param room_code: le code de la room 
     :return : Vrai si la partie est validé, faux sinon.
     
     """
     
     votes = list(get_votes_for_task_in_round(round_id).values())
+    users = get_users_in_room(room_code)
 
     # Test et ajout de l'estimation
-    if len(set(votes)) == 1 :
-        value = votes[0] 
-        add_estimation_task(round_id,value)
-        return value
+    if len(votes) == len(users):
+        if len(set(votes)) == 1 :
+            value = votes[0] 
+            add_estimation_task(round_id,value)
+            return value
+        else : 
+            return
     else : 
         return 
 
@@ -182,7 +188,7 @@ def coffee_break(round_id) -> bool:
     votes = list(get_votes_for_task_in_round(round_id).values())
 
     # La même valeur est choisie par tout les utilisateurs et celle-ci est "café"
-    return (len(set(votes)) == 1 and votes[0] == "café")
+    return (len(set(votes)) == 1 and votes[0] == "coffee")
 
 def reveal_votes(round_id, room_code):
     """
