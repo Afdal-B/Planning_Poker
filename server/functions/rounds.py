@@ -126,7 +126,6 @@ def strict_round(round_id) -> bool:
     votes = list(get_votes_for_task_in_round(round_id).values())
 
     # Vérification qu'il n'y a qu'un seul élément unique
-    
     return len(set(votes)) == 1
 
 
