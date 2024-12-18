@@ -64,6 +64,7 @@ jobs:
         cd server
         git config --local user.email "aithassouelias@gmail.com"
         git config --local user.name "aithassouelias"
+        git pull
         git add docs/
         git commit -m "Mise à jour de la documentation Back-end"
         git push https://x-access-token:${GITHUB_TOKEN}@github.com/Afdal-B/Planning_Poker.git HEAD:main      
