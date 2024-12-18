@@ -5,7 +5,7 @@ Ce module regroupe l'ensemble des fonctions permettant d'intéragir avec les rou
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient
 from datetime import datetime
-from .backlog import next_task
+from .backlog import next_task, add_estimation_task
 
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']
@@ -123,11 +123,16 @@ def strict_round(round_id) -> bool:
     
     """
     
+    # Récupération des votes
     votes = list(get_votes_for_task_in_round(round_id).values())
 
-    # Vérification qu'il n'y a qu'un seul élément unique
-    
-    return len(set(votes)) == 1
+    # Test et ajout de l'estimation
+    if len(set(votes)) == 1 :
+        value = votes[0] 
+        add_estimation_task(round_id,value)
+        return value
+    else : 
+        return 
 
 def coffee_break(round_id) -> bool:
     """
