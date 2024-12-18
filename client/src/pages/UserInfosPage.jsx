@@ -42,6 +42,9 @@ const UserInfosPage = () => {
         // Enregistrement dans le localStorage
         localStorage.setItem("room_code", room_code);
         localStorage.setItem("user_id", user_id);
+
+        // Navigation vers la page de vote
+        window.location.href = "/voting";
       })
       .catch((error) => {
         console.error(

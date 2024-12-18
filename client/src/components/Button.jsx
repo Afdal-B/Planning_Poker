@@ -7,10 +7,13 @@ import React from "react";
  * @param {string} props.text - Le texte à afficher sur le bouton.
  * @returns {JSX.Element} Le composant Button.
  */
-const Button = ({ text }) => {
+const Button = ({ text, page }) => {
   return (
     <div>
-      <button className="bg-[#378C9FFF] text-white rounded-[8px] font-serif justify-center p-2 w-60">
+      <button
+        className="bg-[#378C9FFF] text-white rounded-[8px] font-serif justify-center p-2 w-60"
+        onClick={() => (window.location.href = page)}
+      >
         {text}
       </button>
     </div>

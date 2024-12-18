@@ -20,8 +20,8 @@ const Hero = () => {
         Efficiently plan and estimate tasks with ease
       </p>
       <div className="flex flex-row gap-6 mt-6">
-        <Button text={"Create Room"}></Button>
-        <Button text={"Join Existing Room"}></Button>
+        <Button text={"Create Room"} page={"/create-room"}></Button>
+        <Button text={"Join Existing Room"} page={"/profile"}></Button>
       </div>
     </div>
   );

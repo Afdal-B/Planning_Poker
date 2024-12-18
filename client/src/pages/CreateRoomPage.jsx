@@ -58,7 +58,25 @@ const CreateRoomPage = () => {
       avatar_creator: avatar,
     });
     console.log(data);
-    axios.post(API_URL + "/create_room", data, config);
+    axios
+      .post(`${API_URL}/create_room`, data, config) // utilisation des templates strings
+      .then((response) => {
+        const { room_code, creator_user_id } = response.data; // destructuration de response.data
+        console.log(`Room code: ${room_code}, User ID: ${creator_user_id}`);
+
+        // Enregistrement dans le localStorage
+        localStorage.setItem("room_code", room_code);
+        localStorage.setItem("user_id", creator_user_id);
+
+        // Navigation vers la page d'invitation
+        window.location.href = "/invitation";
+      })
+      .catch((error) => {
+        console.error(
+          "Erreur lors de la connexion à la room :",
+          error.message || error
+        );
+      });
   };
   return (
     <div>
