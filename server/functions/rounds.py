@@ -123,7 +123,6 @@ def strict_round(round_id) -> bool:
     
     """
     
-    # Récupération des votes
     votes = list(get_votes_for_task_in_round(round_id).values())
 
     # Test et ajout de l'estimation
@@ -133,46 +132,6 @@ def strict_round(round_id) -> bool:
         return value
     else : 
         return 
-
-
-def mean_round(round_id) -> int:
-    """
-    Cette fonction permet de valider ou non un round joué en partie moyenne
-
-    :param round_id: l'identifiant du round
-    :return : l'estimation de la tache.
-    
-    """
-    #On fait le premier round en mode stricte 
-    strict_round(round_id)
-    #On vérifie si le round est validé (la fonction strict_round va renvoyer l'estimation directement si le round a été validé)
-    if strict_round(round_id):
-        return strict_round(round_id)
-    else:
-        #On recupère les votes et on fait la moyenne
-        votes = list(get_votes_for_task_in_round(round_id).values())
-        #On fait la moyenne puis on arrondi au supérieur pour avoir un entier 
-        return round(sum(votes)/len(votes))
-
-def median_round(round_id) -> int:
-    """
-    Cette fonction permet de valider ou non un round joué en partie médiane
-
-    :param round_id: l'identifiant du round
-    :return : l'estimation de la tache.
-    
-    """
-    #On fait le premier round en mode stricte 
-    strict_round(round_id)
-    #On vérifie si le round est validé (la fonction strict_round va renvoyer l'estimation directement si le round a été validé)
-    if strict_round(round_id):
-        return strict_round(round_id)
-    else:
-        #On recupère les votes et on fait la moyenne
-        votes = list(get_votes_for_task_in_round(round_id).values())
-        votes.sort()
-        return votes[len(votes)//2]
-    
 
 
 def mean_round(round_id) -> int:
