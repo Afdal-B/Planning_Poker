@@ -33,17 +33,7 @@ const UserInfosPage = () => {
       room_code: code,
     });
     console.log(data);
-    axios
-      .post(API_URL + "/join_room", data, config)
-      .then((response) => {
-        const { room_id, user_id } = response.data;
-        console.log(room_id, user_id);
-        localStorage.setItem("room_id", room_id);
-        localStorage.setItem("user_id", user_id);
-      })
-      .catch((error) => {
-        console.error("Erreur lors de la connexion à la room:", error);
-      });
+    axios.post(API_URL + "/join_room", data,config);
   };
   return (
     <div>
