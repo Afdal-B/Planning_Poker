@@ -65,6 +65,8 @@ jobs:
         cd server
         git config --local user.email "afdalbouraima2@gmail.com"
         git config --local user.name "Bouraima"
+        git checkout main
+        git pull --rebase origin main
         git add docs/
         git commit -m "Mise à jour de la documentation Back-end"
         git push https://x-access-token:${GITHUB_TOKEN}@github.com/Afdal-B/Planning_Poker.git HEAD:main
