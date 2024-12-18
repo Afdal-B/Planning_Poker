@@ -5,7 +5,7 @@ Ce module regroupe l'ensemble des fonctions permettant d'intéragir avec les rou
 from bson import ObjectId
 from pymongo.mongo_client import MongoClient
 from datetime import datetime
-from .backlog import next_task
+from .backlog import next_task, add_estimation_task
 
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']
@@ -128,6 +128,46 @@ def strict_round(round_id) -> bool:
     # Vérification qu'il n'y a qu'un seul élément unique
     return len(set(votes)) == 1
 
+
+def mean_round(round_id) -> int:
+    """
+    Cette fonction permet de valider ou non un round joué en partie moyenne
+
+    :param round_id: l'identifiant du round
+    :return : l'estimation de la tache.
+    
+    """
+    #On fait le premier round en mode stricte 
+    strict_round(round_id)
+    #On vérifie si le round est validé (la fonction strict_round va renvoyer l'estimation directement si le round a été validé)
+    if strict_round(round_id):
+        return strict_round(round_id)
+    else:
+        #On recupère les votes et on fait la moyenne
+        votes = list(get_votes_for_task_in_round(round_id).values())
+        #On fait la moyenne puis on arrondi au supérieur pour avoir un entier 
+        return round(sum(votes)/len(votes))
+
+def median_round(round_id) -> int:
+    """
+    Cette fonction permet de valider ou non un round joué en partie médiane
+
+    :param round_id: l'identifiant du round
+    :return : l'estimation de la tache.
+    
+    """
+    #On fait le premier round en mode stricte 
+    strict_round(round_id)
+    #On vérifie si le round est validé (la fonction strict_round va renvoyer l'estimation directement si le round a été validé)
+    if strict_round(round_id):
+        return strict_round(round_id)
+    else:
+        #On recupère les votes et on fait la moyenne
+        votes = list(get_votes_for_task_in_round(round_id).values())
+        votes.sort()
+        return votes[len(votes)//2]
+    
+
 def coffee_break(round_id) -> bool:
     """
     Cette fonction permet de déterminer si tous les utilisateurs ont voté pour une pause café
@@ -155,12 +195,13 @@ def reveal_votes(round_id, room_code):
     if coffee_break(round_id):
         return "coffee break"
     
-    # Partie stricte
-    if game_rule == "strict" :
-        strict_round(round_id)
-    elif game_rule == "mean":
-        # Fonction moyenne
-        return 
+    match game_rule:
+        case "strict":
+            strict_round(round_id)
+        case "mean":
+            mean_round(round_id)
+        case "median":
+            median_round(round_id)
 
     # Chercher la prochaine tâche
     task = next_task(room_code)
@@ -173,4 +214,3 @@ def reveal_votes(round_id, room_code):
 
     
 
-    
