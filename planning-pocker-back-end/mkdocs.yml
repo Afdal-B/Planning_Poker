@@ -1,0 +1,4 @@
+site_name: planning-pocker-back-end
+site_url : https://planning-pocker.github.io
+nav : 
+  - Home : index.md

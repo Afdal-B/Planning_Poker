@@ -135,6 +135,27 @@ def next_task(room_code):
 
     return task
 
+
+def get_all_tasks(room_code):
+    """
+    Récupère toutes les tâches pour une room spécifique, sans tri.
+
+    :param room_code (str): Code de la room.
+
+    Returns:
+        list: Une liste de toutes les tâches correspondant aux critères.
+    """
+
+    # Requête pour trouver toutes les tâches pour la room
+    tasks = list(tasks_collection.find(
+        {
+            "room_code": room_code
+        }
+    ))
+
+    return tasks
+
+
 def add_estimation_task(task_id,value):
     """
     Met à jour le champ 'estimation' d'une tâche spécifique après validation du vote
