@@ -15,12 +15,12 @@ rooms_collection = db['rooms']
 tasks_collection = db['tasks']
 rounds_collection = db['rounds']
 
-def create_round(task_id, room_code, timer):
+def create_round(task_id, room_code):
     """
     Cette fonction permet de créer un round en base de données pour une tâche d'une room, et de lui attribué un temps imparti.
     
     :param task_id: id de la tâche à laquelle les utilisateurs doivent voter.
-    :param room_id: id de la room dans laquelle les utilisateurs doivent voter.
+    :param room_code: code de la room dans laquelle les utilisateurs doivent voter.
     :param timer: temps imparti pour ce round.
     
     """
@@ -28,10 +28,7 @@ def create_round(task_id, room_code, timer):
         "_id": str(ObjectId()),
         "task_id": task_id,
         "room_code": room_code,
-        "timer": timer,
-        "votes": [],
-        "is_active": True,
-        "results_visible": False
+        "votes": []
     }
 
     try:

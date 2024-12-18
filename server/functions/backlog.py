@@ -136,6 +136,8 @@ def next_task(room_code):
     return task
 
 
+
+
 def get_all_tasks(room_code):
     """
     Récupère toutes les tâches pour une room spécifique, sans tri.
