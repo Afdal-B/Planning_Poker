@@ -61,7 +61,7 @@ const VotingPageUser = () => {
       <div className="flex h-screen">
         <div className="flex-1 flex flex-col">
           <div className="p-6">
-            <Chronometer></Chronometer>
+            <Timer></Timer>
           </div>
           <div className="p-6 flex-1 overflow-auto">
             <div className="flex justify-between items-center mb-4">
