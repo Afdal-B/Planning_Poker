@@ -113,6 +113,7 @@ def fetch_chat_history(room_id):
     :param room_id: L'ID de la room.
     :return: Un dictionnaire contenant la liste des messages et les réactions ou un message d'erreur.
     """
+    
     if not room_id:
         return {"error": "room_id is required"}, 400
     if not ObjectId.is_valid(room_id):
