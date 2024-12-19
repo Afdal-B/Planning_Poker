@@ -6,12 +6,54 @@ import FeatureListItem from "../components/FeatureListItem";
 import Card from "../components/Card";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import {io} from "socket.io-client";
 import { API_URL } from "../constants/constants";
 import RevealVote from "../components/RevealVote";
 const VotingPageUser = () => {
   const [members, setMembers] = useState([]);
   const [feature, setFeature] = useState({});
-  const config = {
+  const socket = io(API_URL);
+  const handleVote =()=>{
+    axios.post(API_URL+"/vote",JSON.stringify({round_id:localStorage.getItem("round_id"),user_id,vote_value}))
+  }
+  socket.on("connect", () => {
+    console.log('Réussi');
+  });
+  
+  useEffect(() => {
+    // Écouter l'événement 'round_created' pour afficher les données
+    socket.on('round_created', (data) => {
+      console.log('Round Created:', data);
+      setFeature(data.task);
+      localStorage.setItem("room_id",data.round_id)
+    });
+    const intervalId = setInterval(() => {
+      socket.emit('members', { room_code: localStorage.getItem("room_code") })
+    }, 2000); 
+    //socket.emit('members', { room_code: localStorage.getItem("room_code") })
+    socket.on("get_members",(data)=>{
+      console.log(data)
+      setMembers(data.members)
+    })
+    // Écouter les erreurs
+    socket.on('error', (error) => {
+      console.error('Error:', error.message);
+    });
+
+    return () => {
+      socket.off('round_created');
+      socket.off('error');
+    };
+   return () => clearInterval(intervalId)
+  }, []);
+
+  const handleCreateRound = () => {
+    // Émettre l'événement 'create_round'
+    socket.emit('create_round', { room_code: localStorage.getItem("room_code") });
+
+  };
+  
+  /*const config = {
     headers: {
       "Content-Type": "application/json",
     },
@@ -56,6 +98,7 @@ const VotingPageUser = () => {
     fetchMembers();
     fetchCurrentFeature();
   }, []);
+  */
   return (
     <div className="min-h-screen bg-white">
       <div className="flex h-screen">
@@ -76,7 +119,7 @@ const VotingPageUser = () => {
               />
               <div className="absolute right-[20px] ">
                 <button
-                  onClick={fetchCurrentFeature}
+                  onClick={handleCreateRound}
                   className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764] "
                 >
                   Next
@@ -85,7 +128,11 @@ const VotingPageUser = () => {
             </div>
             <RevealVote></RevealVote>
           </div>
-
+          <div>
+            <button
+            onClick={handleVote}
+            >Vote</button>
+          </div>
           <div className="flex gap-6 p-6 border-t">
             <Card number="1" />
             <Card number="2" />
