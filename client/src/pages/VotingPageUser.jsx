@@ -7,7 +7,7 @@ import Card from "../components/Card";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { API_URL } from "../constants/constants";
-import Chronometer from "../components/Chronometre";
+import RevealVote from "../components/RevealVote";
 const VotingPageUser = () => {
   const [members, setMembers] = useState([]);
   const [feature, setFeature] = useState({});
@@ -59,28 +59,33 @@ const VotingPageUser = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="flex h-screen">
-        <div className="flex-1 flex flex-col">
-          <div className="p-6">
-            <Timer></Timer>
+        <div className="flex flex-col">
+          <div className="flex justify-between p-5">
+            <h1 className="text-2xl font-bold">Room Name</h1>
+            <div>
+              <Timer></Timer>
+            </div>
           </div>
           <div className="p-6 flex-1 overflow-auto">
-            <div className="flex justify-between items-center mb-4">
+            <div className="relative flex justify-center items-center mb-4">
               <FeatureListItem
                 number={""}
                 actor={feature.en_tant_que || ""}
                 feature={feature.fonctionnalite || ""}
                 goal={feature.objectif || ""}
               />
-              <div className="flex items-center gap-4">
+              <div className="absolute right-[20px] ">
                 <button
                   onClick={fetchCurrentFeature}
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764] "
                 >
-                  Next Feature
+                  Next
                 </button>
               </div>
             </div>
+            <RevealVote></RevealVote>
           </div>
+
           <div className="flex gap-6 p-6 border-t">
             <Card number="1" />
             <Card number="2" />

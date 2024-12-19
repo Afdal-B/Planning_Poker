@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { API_URL } from "../constants/constants";
 
-const socket = io("http://localhost:5000"); // Connexion au serveur Flask-SocketIO
+const socket = io(API_URL); // Connexion au serveur Flask-SocketIO
 
 const Timer = () => {
   const [time, setTime] = useState(0);
@@ -28,8 +29,10 @@ const Timer = () => {
   };
 
   return (
-    <div className="flex items-center justify-center bg-gray-800 text-white p-4 rounded-md shadow-md">
-      <h1 className="text-3xl font-mono font-semibold">{formatTime(time)}</h1>
+    <div className="flex items-center justify-center bg-[#ECF4F7FF] text-white p-4 rounded-md shadow-md w-20">
+      <h1 className="text-xl font-mono font-semibold text-[#378C9FFF]">
+        {formatTime(time)}
+      </h1>
     </div>
   );
 };

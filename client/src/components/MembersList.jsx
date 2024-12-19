@@ -2,7 +2,7 @@ import React from "react";
 
 const MembersList = ({ members }) => {
   return (
-    <div className="p-4 border-l w-80">
+    <div className="p-4 border-l w-80 overflow-y-auto">
       <h3 className="font-semibold mb-4">Members</h3>
       <div className="space-y-4">
         {members.map((member) => (

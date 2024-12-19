@@ -146,34 +146,39 @@ def display_round_route():
     return jsonify({"round_id":round_id, "task":task})
  
  
-# Variables globales pour le chronomètre
-start_time = None
+time_counter = 0  # Temps en secondes
 is_running = False
- 
-# Fonction pour diffuser le temps
-def send_timer():
-    global start_time, is_running
-    while is_running:
-        elapsed_time = time() - start_time
-        socketio.emit('update_time', {'time': int(elapsed_time)})  # Diffuser le temps en secondes
-        sleep(1)  # Mise à jour toutes les secondes
+thread = None
 
- 
+def broadcast_timer():
+    global time_counter, is_running
+    while is_running:
+        sleep(1)
+        time_counter += 1
+        socketio.emit("update_time", {"time": time_counter})  # Envoi du temps
+
 @socketio.on("start_timer")
 def start_timer():
-    global start_time, is_running
+    global is_running, thread
     if not is_running:
-        start_time = time()
         is_running = True
-        thread = Thread(target=send_timer)
+        thread = Thread(target=broadcast_timer)
         thread.start()
-        print("Chronomètre démarré.")
- 
+        print("Timer démarré.")
+
 @socketio.on("stop_timer")
 def stop_timer():
     global is_running
-    is_running = False
-    print("Chronomètre arrêté.")
+    if is_running:
+        is_running = False
+        print("Timer arrêté.")
+
+@socketio.on("reset_timer")
+def reset_timer():
+    global time_counter
+    time_counter = 0
+    socketio.emit("update_time", {"time": time_counter})
+    print("Timer réinitialisé.")
 
 
 # Route HTTP pour récupérer l'historique des messages d'une room
