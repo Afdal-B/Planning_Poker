@@ -146,7 +146,7 @@ def display_round_route():
     return jsonify({"round_id":round_id, "task":task})
  
  
-time_counter = 0  # Temps en secondes
+time_counter = 300  # Temps en secondes
 is_running = False
 thread = None
 
@@ -154,7 +154,7 @@ def broadcast_timer():
     global time_counter, is_running
     while is_running:
         sleep(1)
-        time_counter += 1
+        time_counter -= 1
         socketio.emit("update_time", {"time": time_counter})  # Envoi du temps
 
 @socketio.on("start_timer")
@@ -176,7 +176,7 @@ def stop_timer():
 @socketio.on("reset_timer")
 def reset_timer():
     global time_counter
-    time_counter = 0
+    time_counter = 300
     socketio.emit("update_time", {"time": time_counter})
     print("Timer réinitialisé.")
 
