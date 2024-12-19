@@ -8,8 +8,14 @@ import React from "react";
  * @returns {JSX.Element} Le composant Card.
  */
 const Card = ({ number }) => {
+  const handleClick = () =>{
+    localStorage.setItem("vote",number)
+
+  }
   return (
-    <div className="flex items-center justify-center w-[50px] h-[80px] bg-gray-100 rounded-lg shadow-lg hover:bg-gray-200 hover:shadow-xl active:ring-2 active:ring-blue-500 cursor-pointer transition-all border-[#378C9FFF] border">
+    <div className="flex items-center justify-center w-[50px] h-[80px] bg-gray-100 rounded-lg shadow-lg hover:bg-gray-200 hover:shadow-xl active:ring-2 active:ring-blue-500 cursor-pointer transition-all border-[#378C9FFF] border"
+    onClick={handleClick}
+    >
       <h1 className="text-md font-bold text-gray-800">{number}</h1>
     </div>
   );
