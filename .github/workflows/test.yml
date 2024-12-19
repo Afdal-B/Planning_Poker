@@ -1,13 +1,13 @@
 name: Run Tests
 
-#Ce workflow exécute des tests automatisés pour vérifier que le code fonctionne correctement.
-#Il est déclenché à chaque fois qu'un changement est poussé sur la branche principale ou qu'une pull request est ouverte.
+# Ce workflow exécute des tests automatisés pour vérifier que le code fonctionne correctement.
+# Il est déclenché à chaque fois qu'un changement est poussé sur la branche principale ou qu'une pull request est ouverte.
 
-on: #Définition des événements qui déclenchent ce workflow
-  push: #Ce workflow s'exécute à chaque push sur la branche main 
+on: # Définition des événements qui déclenchent ce workflow
+  push: # Ce workflow s'exécute à chaque push sur la branche main 
     branches: 
       - main
-  pull_request: #Ou à chaque ouverture d'une pull request
+  pull_request: # Ou à chaque ouverture d'une pull request
     branches:
       - main
 
@@ -16,19 +16,19 @@ permissions:
 
 jobs:
   test:
-    runs-on: ubuntu-latest #Spécification du runner sur lequel le job s'exécute
+    runs-on: ubuntu-latest # Spécification du runner sur lequel le job s'exécute
 
     steps:
     - name: Récupération du repository
-      uses: actions/checkout@v4 #Utilise une action GitHub pour cloner le dépôt dans l'environnement de travail (runner)
+      uses: actions/checkout@v4 # Utilise une action GitHub pour cloner le dépôt dans l'environnement de travail (runner)
 
     - name: Installation Python
-      uses: actions/setup-python@v4 #Installe Python dans l'environnement
+      uses: actions/setup-python@v4 # Installe Python dans l'environnement
       with:
         python-version: 3.12
     
     - name: Installation des packages 
-      run: | #Crée un environnement virtuel et installe les dépendances du projet définies dans le fichier requirements.txt
+      run: | # Crée un environnement virtuel et installe les dépendances du projet définies dans le fichier requirements.txt
         python -m venv venv    
         source venv/bin/activate 
         pip install --upgrade pip
@@ -36,32 +36,32 @@ jobs:
         pip install sphinx sphinx_rtd_theme myst_parser
     
     - name: Set PYTHONPATH
-      run: echo "PYTHONPATH=$(pwd)/server" >> $GITHUB_ENV ##Définit une variable d'environnement PYTHONPATH pour inclure le répertoire 'server'
+      run: echo "PYTHONPATH=$(pwd)/server" >> $GITHUB_ENV # Définit une variable d'environnement PYTHONPATH pour inclure le répertoire 'server'
     
     - name: Lancement des tests
-      run: | #Active l'enironnement virtuel et lance les tests 
+      run: | # Active l'environnement virtuel et lance les tests 
         source venv/bin/activate 
         pytest ./server/tests/
     
     - name: Supprime le fichier functions.rst
-      run: |
+      run: | # Supprime le fichier functions.rst généré précédemment
         rm server/docs/functions.rst  
 
     - name: Génère la documentation dans le dossier docs
-      run: |
+      run: | # Génère la documentation Sphinx dans le dossier docs
         source venv/bin/activate 
         sphinx-apidoc -o docs server/functions
 
     - name: Relance la création des fichiers HTML
-      run: |
+      run: | # Relance la création des fichiers HTML de la documentation
         source venv/bin/activate 
         cd server/docs  
         make html
 
-    - name: Commit and push documentation #Commit et pousse la documentation générée vers le dépôt Git
+    - name: Commit and push documentation # Commit et pousse la documentation générée vers le dépôt Git
       env:
-        GITHUB_TOKEN: ${{ secrets.P_A_T }}  #Définit la variable d'environnement GITHUB_TOKEN
-      run: |
+        GITHUB_TOKEN: ${{ secrets.P_A_T }}  # Définit la variable d'environnement GITHUB_TOKEN
+      run: | # Configure Git, récupère les dernières modifications, commit et push la documentation
         cd server
         git config --local user.email "afdalbouraima2@gmail.com"
         git config --local user.name "Bouraima"
@@ -71,4 +71,3 @@ jobs:
         git add docs/
         git commit -m "Mise à jour de la documentation Back-end"
         git push https://x-access-token:${GITHUB_TOKEN}@github.com/Afdal-B/Planning_Poker.git HEAD:main
-    
