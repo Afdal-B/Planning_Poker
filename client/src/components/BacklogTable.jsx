@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Check } from "lucide-react";
 
-const BacklogTable = ({backlogItems}) => {
+const BacklogTable = ({ backlogItems }) => {
   //const [backlogItems, setBacklogItems] = useState(backlogItems);
 
   return (
@@ -9,7 +9,7 @@ const BacklogTable = ({backlogItems}) => {
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Backlog items</h2>
         <span className="text-gray-600">
-          Total <span className="text-blue-500">{backlogItems.length}</span>{" "}
+          Total <span className="bg-[#378C9FFF]">{backlogItems.length}</span>{" "}
           items
         </span>
       </div>
@@ -30,7 +30,7 @@ const BacklogTable = ({backlogItems}) => {
                 <td className="p-4">{item.fonctionnalite}</td>
                 <td className="p-4">{item.objectif}</td>
                 <td className="p-4">
-                  <button className="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600">
+                  <button className="bg-[#378C9FFF] text-white px-4 py-1 rounded hover:bg-blue-600">
                     Vote
                   </button>
                 </td>

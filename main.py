@@ -10,6 +10,8 @@ from server.functions.backlog import export_backlog_to_json, get_all_tasks, next
 from server.functions.rounds import vote_for_task_in_round, create_round
 from flask_socketio import SocketIO, emit, join_room
 from server.functions.chat import send_message, add_reaction, fetch_chat_history
+from threading import Timer
+import threading
 
 # Initialisation de l'application Flask 
 app = Flask(__name__)
@@ -17,7 +19,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 #Initialisation de l'objet SocketIO
 socketio = SocketIO(app, cors_allowed_origins="*")
-
+timers = {}
 CORS(app)
 
 @app.route('/create_room', methods = ['GET', 'POST'])
@@ -62,8 +64,8 @@ def join_room_route():
 
     return jsonify({"user_id":user_id, "room_code":room_code})
 
-@app.route('/<round_id>/vote', methods = ['GET', 'POST'])
-def vote_round_route(round_id):
+@app.route('/vote', methods = ['GET', 'POST'])
+def vote_round_route():
     """
     Cette route permet à un utilisateur de voter dans un round.
     """
@@ -71,6 +73,7 @@ def vote_round_route(round_id):
     data = request.get_json()
 
     # Récupération des autres informations
+    round_id = data.get('round_id')
     user_id = data.get('user_id')
     vote_value = data.get('vote_value')
 
@@ -82,7 +85,7 @@ def vote_round_route(round_id):
 @app.route('/users', methods = ['GET', 'POST'])
 def users_route():
     """
-    Cette route permet d'afficher toutes les tâches du backlog'
+    Cette route permet d'afficher touts les utilisateurs de la room'
     """
     # Récupération des données envoyées depuis le front-end
     data = request.get_json()
@@ -127,6 +130,44 @@ def export_backlog_route():
 
     return 'Hello, World!'
 
+@socketio.on('members')
+def get_members(data):
+    """
+    Cette route permet d'afficher touts les utilisateurs de la room'
+    """
+    # Récupération des données envoyées depuis le front-end
+
+    # Récupération des autres informations du formulaire
+    room_code = data.get('room_code')
+    # Appel de la fonction pour l'envoi en base de données
+    users = get_users_in_room(room_code)
+
+    emit("get_members",{"members":users},to=room_code)
+    join_room(room_code)
+
+@socketio.on('create_round')
+def create_round_socket(data):
+    """
+    Gestion de l'événement Socket.IO pour créer un round
+    """
+    # Récupération des données envoyées par le frontend
+    room_code = data.get('room_code')
+
+    # Appel des fonctions pour obtenir la tâche et créer le round
+    task = next_task(room_code)
+    if not task:
+        emit('error', {"message": "No task available for this room"}, to=request.sid)
+        return
+
+    round_id = create_round(task["_id"], room_code)
+
+    # Envoyer les données à tous les utilisateurs de la room
+    emit('round_created', {"round_id": round_id, "task": task}, to=room_code)
+
+    # Joindre la room pour synchronisation
+    join_room(room_code)
+
+
 @app.route('/round', methods = ['GET', 'POST'])
 def display_round_route():
     """
@@ -140,40 +181,17 @@ def display_round_route():
 
     # Appel de la fonction pour l'envoi en base de données
     task = next_task(room_code)
+    print(task)
 
     round_id = create_round(task["_id"], room_code)
 
     return jsonify({"round_id":round_id, "task":task})
  
- 
-# Variables globales pour le chronomètre
-start_time = None
-is_running = False
- 
-# Fonction pour diffuser le temps
-def send_timer():
-    global start_time, is_running
-    while is_running:
-        elapsed_time = time() - start_time
-        socketio.emit('update_time', {'time': int(elapsed_time)})  # Diffuser le temps en secondes
-        sleep(1)  # Mise à jour toutes les secondes
-
- 
-@socketio.on("start_timer")
-def start_timer():
-    global start_time, is_running
-    if not is_running:
-        start_time = time()
-        is_running = True
-        thread = Thread(target=send_timer)
-        thread.start()
-        print("Chronomètre démarré.")
- 
-@socketio.on("stop_timer")
-def stop_timer():
-    global is_running
-    is_running = False
-    print("Chronomètre arrêté.")
+@socketio.on('join_room')
+def join_room_event(data):
+    room_code = data['room_code']
+    join_room(room_code)
+    emit('joined_room', {"message": f"User joined room {room_code}"}, to=room_code)
 
 
 # Route HTTP pour récupérer l'historique des messages d'une room

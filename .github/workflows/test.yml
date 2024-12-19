@@ -67,6 +67,7 @@ jobs:
         git config --local user.name "Bouraima"
         git fetch --all
         git checkout main
+        git stash
         git pull --rebase origin main
         git add docs/
         git commit -m "Mise à jour de la documentation Back-end"
