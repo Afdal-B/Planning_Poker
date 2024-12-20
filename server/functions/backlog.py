@@ -39,8 +39,8 @@ def backlog_json_to_df(backlog_json) -> pd.DataFrame:
         tasks = backlog_data["tasks"]
         backlog_df = pd.DataFrame(tasks)
     else:
-        #
-        backlog_df = backlog_data
+        
+        return pd.DataFrame()
 
     # Vérification de la structure des colonnes
     expected_columns_3 = ["en_tant_que", "fonctionnalite", "objectif"]
