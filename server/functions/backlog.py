@@ -29,14 +29,13 @@ def backlog_json_to_df(backlog_json) -> pd.DataFrame:
     """
     try:
         # Tentative de chargement du fichier JSON
-        backlog_data = pd.read_json(backlog_json, typ='dict')
+        backlog_data = pd.read_json(backlog_json, typ="dict")
     except ValueError as e:
         print(f"Erreur : Le fichier JSON est invalide ou corrompu. Détails : {e}")
         return pd.DataFrame()
 
     # Vérification si la structure contient "tasks" et "game_rule"
-    if "tasks" in backlog_data and "game_rule" in backlog_data:
-        print(f"Structure avec 'tasks' et 'game_rule' détectée. Règle : {backlog_data['game_rule']}")
+    if "tasks" in backlog_data or "game_rule" in backlog_data:
         tasks = backlog_data["tasks"]
         backlog_df = pd.DataFrame(tasks)
     else:
@@ -89,11 +88,7 @@ def export_backlog_to_json(room_code):
             "tasks": tasks
         }
 
-        # Écriture des données dans un fichier JSON
-        with open("backlog_temporaire.json", "w", encoding="utf-8") as json_file:
-            json.dump(export_data, json_file, ensure_ascii=False, indent=4)
-
-        print(f"Les tâches ont été exportées dans 'backlog_temporaire.json'.")
+        return export_data
     except Exception as e:
         print(f"Une erreur est survenue: {e}")
 

@@ -1,0 +1,17 @@
+{
+    "game_rule": "moyenne",
+    "tasks": [
+        {
+            "en_tant_que": "Utilisateur",
+            "fonctionnalite": "Créer un compte",
+            "objectif": "Accéder au tableau de bord",
+            "estimation": 3
+        },
+        {
+            "en_tant_que": "Admin",
+            "fonctionnalite": "Gérer les utilisateurs",
+            "objectif": "Maintenir l'application",
+            "estimation": 5
+        }
+    ]
+}

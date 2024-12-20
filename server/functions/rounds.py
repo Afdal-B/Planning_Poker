@@ -16,6 +16,7 @@ db = client['planning_poker']
 rooms_collection = db['rooms']
 tasks_collection = db['tasks']
 rounds_collection = db['rounds']
+users_collection = db['users']
 
 def create_round(task_id, room_code):
     """
@@ -55,15 +56,6 @@ def vote_for_task_in_round(round_id: str, user_id: str, vote_value: str) -> dict
     if not round:
         return {"error": "Round non trouvé"}
     
-    # Vérification si le round est actif
-    if not round['is_active']:
-        return {"error": "Le round n'est plus actif, impossible de voter"}
-    
-    # Vérification si l'utilisateur a déjà voté
-    existing_vote = next((vote for vote in round['votes'] if vote['user_id'] == user_id), None)
-    if existing_vote:
-        return {"error": "L'utilisateur a déjà voté"}
-    
     # Ajout du vote à la liste des votes dans le round
     new_vote = {
         "user_id": user_id,
@@ -84,10 +76,11 @@ def vote_for_task_in_round(round_id: str, user_id: str, vote_value: str) -> dict
 
 def get_votes_for_task_in_round(round_id: str) -> dict:
     """
-    Récupère l'ensemble des votes pour une tâche spécifique dans un round. 
+    Récupère l'ensemble des votes pour une tâche spécifique dans un round, 
+    avec les détails des utilisateurs (nom d'utilisateur et avatar).
     
     :param round_id: L'ID du round pour lequel récupérer les votes.
-    :return: Un dictionnaire contenant la liste des votes par utilisateur ou un message d'erreur.
+    :return: Un dictionnaire contenant la liste des votes avec les informations des utilisateurs.
     """
     
     # Recherche du round dans la base de données
@@ -100,20 +93,31 @@ def get_votes_for_task_in_round(round_id: str) -> dict:
     if not votes:
         return {"error": "Aucun vote trouvé pour ce round"}
     
-    # Structure de réponse avec les votes par utilisateur
-    results = {}
+    # Structure de réponse avec les informations enrichies
+    results = []
     for vote in votes:
         user_id = vote['user_id']
         vote_value = vote['vote']
-        voted_at = vote['voted_at']
         
-        if user_id not in results:
-            results[user_id] = []
-        results.update({user_id: vote_value})
+        # Récupération des informations utilisateur depuis la collection "users"
+        user = users_collection.find_one({"_id": user_id})
+        if not user:
+            return {"error": f"Utilisateur avec l'ID {user_id} non trouvé"}
+        
+        username = user.get("username", "Nom inconnu")
+        avatar = user.get("avatar", "Avatar non disponible")
+        
+        # Ajouter les informations dans le résultat final
+        results.append({
+            "username": username,
+            "avatar": avatar,
+            "vote_value": vote_value
+        })
     
     return results
 
-def strict_round(round_id, room_code) -> int:
+
+def strict_round(round_id) -> int:
     """
     Cette fonction permet de valider ou non un round joué en partie strict
 
@@ -123,8 +127,8 @@ def strict_round(round_id, room_code) -> int:
     
     """
     
-    votes = list(get_votes_for_task_in_round(round_id).values())
-    
+    votes = [vote['vote_value'] for vote in get_votes_for_task_in_round(round_id)]
+    print(votes)
     if len(set(votes)) == 1 :
         value = votes[0] 
         add_estimation_task(round_id,value)
@@ -149,7 +153,7 @@ def mean_round(round_id) -> int:
         return strict_round(round_id)
     else:
         # On recupère les votes et on fait la moyenne
-        votes = list(get_votes_for_task_in_round(round_id).values())
+        votes = [vote['vote_value'] for vote in get_votes_for_task_in_round(round_id)]
         # Vérifier si "coffee" est dans les votes
         if "coffee" in votes:
             return {"error": "Vote 'coffee' détecté, estimation non calculée"}
@@ -175,7 +179,7 @@ def median_round(round_id) -> int:
         return strict_round(round_id)
     else:
         # On recupère les votes et on fait la moyenne
-        votes = list(get_votes_for_task_in_round(round_id).values())
+        votes = [vote['vote_value'] for vote in get_votes_for_task_in_round(round_id)]
         # Vérifier si "coffee" est dans les votes
         if "coffee" in votes:
             return {"error": "Vote 'coffee' détecté, estimation non calculée"}
@@ -196,7 +200,7 @@ def coffee_break(round_id) -> bool:
     
     """
     
-    votes = list(get_votes_for_task_in_round(round_id).values())
+    votes = [vote['vote_value'] for vote in get_votes_for_task_in_round(round_id)]
 
     # La même valeur est choisie par tout les utilisateurs et celle-ci est "café"
     return (len(set(votes)) == 1 and votes[0] == "coffee")
@@ -214,16 +218,19 @@ def reveal_votes(round_id, room_code):
         {"room_code": room_code}, 
         {"game_rule": 1, "_id": 0} # inclure uniquement game_rule
     )
+
+    game_rule = game_rule["game_rule"]
     
     users = get_users_in_room(room_code)
-    votes = list(get_votes_for_task_in_round(round_id).values())
+    votes = [vote['vote_value'] for vote in get_votes_for_task_in_round(round_id)]
 
+    print(len(votes), len(users))
     # Test et ajout de l'estimation
     if len(votes) == len(users):
         
         # Pause café
         if coffee_break(round_id):
-            return "coffee"
+            return {"estimated" : True, "estimation" : "coffee"}
         
         match game_rule:
             case "strict":
@@ -234,9 +241,9 @@ def reveal_votes(round_id, room_code):
                 estimation = median_round(round_id)
 
         if estimation is None :
-            return "Voting unvalid"
+            return {"estimated" : False, "erreur":"1"}
         else : 
-            return estimation
+            return {"estimated" : True, "estimation" : estimation}
     else :
-        return "Not everyone has voted"
+        return {"estimated" : False, "erreur":"2"}
     
