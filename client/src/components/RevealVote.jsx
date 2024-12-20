@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const RevealVote = ({votes}) => {
+const RevealVote = ({ votes, OnShowEstimation }) => {
   const [reveal, setReveal] = useState(false);
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow rounded">
@@ -38,6 +38,12 @@ const RevealVote = ({votes}) => {
               </li>
             ))}
           </ul>
+          <button
+            onClick={OnShowEstimation}
+            className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764]"
+          >
+            show estimation
+          </button>
         </div>
       )}
     </div>

@@ -6,7 +6,7 @@ from time import time, sleep
 from threading import Thread
 from server.functions.rooms import create_room, get_users_in_room
 from server.functions.users import create_user
-from server.functions.backlog import export_backlog_to_json, get_all_tasks, next_task
+from server.functions.backlog import export_backlog_to_json, get_all_tasks, get_all_tasks, next_task
 from server.functions.rounds import vote_for_task_in_round, create_round, get_votes_for_task_in_round, reveal_votes
 from flask_socketio import SocketIO, emit, join_room
 from server.functions.chat import send_message, add_reaction, fetch_chat_history
@@ -18,7 +18,7 @@ app = Flask(__name__)
 #Récupération de la clé secrète
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 #Initialisation de l'objet SocketIO
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*",logger=True,engineio_logger=True)
 timers = {}
 CORS(app)
 
@@ -45,6 +45,7 @@ def create_room_route():
 
     # Renvoie du room code et de l'user_id du createur au front-end
     return jsonify(data_dict)
+
 
 @app.route('/join_room', methods = ['GET', 'POST'])
 def join_room_route():
@@ -113,21 +114,6 @@ def backlog_route():
 
     return jsonify({"tasks": tasks})
 
-@app.route('/export_backlog', methods = ['GET', 'POST'])
-def export_backlog_route():
-    """
-    Cette route permet de récupérer le room code et l'afficher sur le front-end pour que le créateur de la room puisse le partager
-    """
-    # Récupération des données envoyées depuis le front-end
-    #data = request.get_json()
-
-    # Récupération des autres informations du formulaire
-    #room_code = data.get('room_code')
-
-    # Appel de la fonction pour l'envoi en base de données
-    #export_backlog_to_json(room_code)
-
-    return 'Hello, World!'
 
 @app.route('/download-json', methods=['GET'])
 def download_json():
@@ -218,17 +204,8 @@ def create_round_socket(data):
         emit('error', {"message": "No task available for this room"}, to=request.sid)
         return
 
-    round_id = create_round(task["_id"], room_code)
-
-    # Envoyer les données à tous les utilisateurs de la room
-    emit('round_created', {"round_id": round_id, "task": task}, to=room_code)
-
-    # Joindre la room pour synchronisation
-    join_room(room_code)
-
-
-@app.route('/round', methods = ['GET', 'POST'])
-def display_round_route():
+@app.route('/export_backlog', methods = ['GET', 'POST'])
+def export_backlog_route():
     """
     Cette route de créer un round
     """
@@ -240,7 +217,6 @@ def display_round_route():
 
     # Appel de la fonction pour l'envoi en base de données
     task = next_task(room_code)
-    print(task)
 
     round_id = create_round(task["_id"], room_code)
 
@@ -301,4 +277,4 @@ def handle_add_reaction(data):
 
 # Lancer l'application
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app,port=int(os.getenv('PORT', 5000)) ,debug=True)
