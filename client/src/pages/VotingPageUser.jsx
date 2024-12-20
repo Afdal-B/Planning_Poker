@@ -7,9 +7,10 @@ import Card from "../components/Card";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import { API_URL } from "../constants/constants";
+import { API_URL, SOCKET_URL } from "../constants/constants";
 import RevealVote from "../components/RevealVote";
 import TaskEstimated from "../components/TaskEstimated";
+import { SOCKET_URL } from "../constants/constants";
 const VotingPageUser = () => {
   const [members, setMembers] = useState([]);
   const [feature, setFeature] = useState({});
@@ -19,7 +20,7 @@ const VotingPageUser = () => {
   const [nextButton, setNextButton] = useState(true);
   const [taskEstmatedModal, setTaskEstimatedModal] = useState(false);
   let hasVoted = false;
-  const socket = io(API_URL, { transports: ["websocket"] });
+  const socket = io(SOCKET_URL, { transports: ["websocket"] });
   socket.on("connect", () => {
     console.log("connexion réussie");
   });
