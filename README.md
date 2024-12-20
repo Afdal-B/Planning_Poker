@@ -1,4 +1,4 @@
-# Application planning pocker
+# Application Planning Pocker
 
 ## Présentation du projet
 L'application **Planning Poker** est un outil collaboratif pour les équipes agiles, permettant d'estimer la difficulté des tâches d'un projet à l'aide de cartes virtuelles. Elle offre une interface simple pour créer des sessions et voter sur les tâches. Une fonctionnalité de chat en temps réel est également intégrée, permettant aux membres de l'équipe de communiquer, discuter des estimations et parvenir rapidement à un consensus.
@@ -37,26 +37,56 @@ Ces plateformes sont connectées directement au dépôt GitHub, ce qui garantit 
 La configuration des pipelines CI/CD se trouve dans les fichiers `CI.yaml` et `test.yml` dans le répertoire [`.github/workflows`](.github/workflows).
 
 ## Installation 
+### Tester l'application
+Vous avez deux options pour tester l'application :  
+
+1. **Version déployée**  
+   Accédez à la version déployée de l'application via l'URL suivante :  
+   👉 [Planning Poker](https://planning-poker-azure.vercel.app)  
+
+2. **Version locale**  
+   Suivez les étapes ci-dessous pour cloner et exécuter l'application localement :
+
+### Étapes pour la version locale
 1. Clonez le projet :
    ```bash
    git clone https://github.com/Afdal-B/Planning_Poker.git
+   cd <nom_du_repo>
 
 2. Installez les dépendances :
-    * Pour le frontend 
+    * Pour le frontend
+        ```bash
+        cd client 
         npm install
 
     * Pour le backend
+        ```bash
+        cd server 
+        python -m venv .venv
+        .venv\Scripts\activate
         pip install -r requirements.txt
 
 3. Lancer l'application :
     * Pour le frontend 
+        ```bash
         npm start 
     * Pour le backend 
+        ```bash
         flask run 
 
 ## Documentation 
+### Frontend
+La documentation du frontend a été générée automatiquement à l'aide de scripts npm. Elle se trouve dans le dossier [`client/docs`](client/docs) Pour y accéder :
 
+* Clonez le projet en local.
+* Explorez les fichiers disponibles dans le dossier client/docs pour consulter les détails des composants, des hooks et des fonctionnalités du frontend.
 
+### Backend 
+La documentation du backend a été générée automatiquement avec Sphinx. Elle est disponible dans le dossier [`server/docs/_build/html`](server/docs/_build/html). Pour y accéder :
+
+* Clonez le projet en local.
+* Ouvrez le fichier index.html situé dans le dossier server/docs/_build/html avec votre navigateur.
+* Consultez les instructions détaillées pour les API et les configurations du backend.
 
 
 ## Les contributeurs
@@ -64,3 +94,7 @@ La configuration des pipelines CI/CD se trouve dans les fichiers `CI.yaml` et `t
 - Afdal BOURAIMA
 - Yousra BOUHANNA
 - Elias AIT HASSOU
+
+## Licence
+
+Aucune licence spécifique n'a encore été attribuée à ce projet. Tous les droits sont réservés par les contributeurs. Si vous souhaitez utiliser ou modifier ce projet, veuillez contacter les contributeurs pour obtenir leur autorisation.
