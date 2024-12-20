@@ -1,5 +1,5 @@
 import os 
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import json
 from time import time, sleep
@@ -7,7 +7,7 @@ from threading import Thread
 from server.functions.rooms import create_room, get_users_in_room
 from server.functions.users import create_user
 from server.functions.backlog import export_backlog_to_json, get_all_tasks, next_task
-from server.functions.rounds import vote_for_task_in_round, create_round
+from server.functions.rounds import vote_for_task_in_round, create_round, get_votes_for_task_in_round, reveal_votes
 from flask_socketio import SocketIO, emit, join_room
 from server.functions.chat import send_message, add_reaction, fetch_chat_history
 from threading import Timer
@@ -76,11 +76,10 @@ def vote_round_route():
     round_id = data.get('round_id')
     user_id = data.get('user_id')
     vote_value = data.get('vote_value')
-
+    
     # Appel de la fonction pour l'envoi en base de données
     vote_for_task_in_round(round_id, user_id, vote_value)
-
-    return
+    return jsonify({"message": True})
 
 @app.route('/users', methods = ['GET', 'POST'])
 def users_route():
@@ -130,6 +129,27 @@ def export_backlog_route():
 
     return 'Hello, World!'
 
+@app.route('/download-json', methods=['GET'])
+def download_json():
+    """
+    Cette route permet de télécharger un fichier JSON contenant des données.
+    """
+    # Exemple de contenu JSON
+    data = request.get_json()
+
+    # Récupération des autres informations du formulaire
+    room_code = data.get('room_code')
+    data_json = export_backlog_to_json(room_code)
+
+    # Générer un fichier temporaire
+    file_name = "backlog_temporaire.json"
+    with open(file_name, 'w', encoding='utf-8') as json_file:
+        json.dump(data_json, json_file, ensure_ascii=False, indent=4)
+    
+    print(send_file(file_name, as_attachment=True))
+    # Envoi du fichier en réponse HTTP
+    return send_file(file_name, as_attachment=True)
+
 @socketio.on('members')
 def get_members(data):
     """
@@ -143,6 +163,45 @@ def get_members(data):
     users = get_users_in_room(room_code)
 
     emit("get_members",{"members":users},to=room_code)
+    join_room(room_code)
+
+@socketio.on('users_votes')
+def get_users_votes_socket(data):
+    """
+    Gestion de l'événement Socket.IO pour lancer la fonction de validation d'un round
+    """
+    # Récupération des données envoyées par le frontend
+    round_id = data.get('round_id')
+    room_code = data.get('room_code')
+    # Appel des fonctions pour obtenir la tâche et créer le round
+    votes = get_votes_for_task_in_round(round_id)
+    if not votes:
+        emit('error', {"message": "No votes available for this round"}, to=request.sid)
+        return
+    # Envoyer les données à tous les utilisateurs de la room
+    emit('get_users_votes', {"votes":votes}, to=room_code)
+
+    # Joindre la room pour synchronisation
+    join_room(room_code)
+
+@socketio.on('reveal_votes')
+def get_reveal_votes_socket(data):
+    """
+    Gestion de l'événement Socket.IO pour lancer la fonction de validation d'un round
+    """
+    # Récupération des données envoyées par le frontend
+    round_id = data.get('round_id')
+    room_code = data.get('room_code')
+    # Appel des fonctions pour obtenir la tâche et créer le round
+    estimation = reveal_votes(round_id, room_code)
+    print(estimation)
+    if not estimation:
+        emit('error', {"message": "No estimation available for this round"}, to=request.sid)
+        return
+    # Envoyer les données à tous les utilisateurs de la room
+    emit('get_reveal_votes', estimation, to=room_code)
+
+    # Joindre la room pour synchronisation
     join_room(room_code)
 
 @socketio.on('create_round')

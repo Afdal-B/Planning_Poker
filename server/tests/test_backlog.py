@@ -1,6 +1,7 @@
 from functions.backlog import backlog_json_to_df
 import os
 import pytest
+import pandas as pd
 
 def test_backlog_valid():
     """
