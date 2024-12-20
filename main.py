@@ -301,4 +301,4 @@ def handle_add_reaction(data):
 
 # Lancer l'application
 if __name__ == '__main__':
-    socketio.run(app, debug=True)
+    socketio.run(app,port=int(os.getenv('PORT', 5000)) ,debug=True)

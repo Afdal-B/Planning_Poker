@@ -20,6 +20,9 @@ const VotingPageUser = () => {
   const [taskEstmatedModal, setTaskEstimatedModal] = useState(false);
   let hasVoted = false;
   const socket = io(API_URL);
+  socket.on("connect", () => {
+    console.log("connexion réussie");
+  });
   const handleDownload = () => {
     try {
       // Appel à l'API pour récupérer le fichier JSON
