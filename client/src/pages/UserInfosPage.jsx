@@ -44,7 +44,7 @@ const UserInfosPage = () => {
         localStorage.setItem("user_id", user_id);
 
         // Navigation vers la page de vote
-        window.location.href = "/voting";
+        window.location.href = "/voting-page-user";
       })
       .catch((error) => {
         console.error(

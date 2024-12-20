@@ -1,6 +1,7 @@
 from functions.backlog import backlog_json_to_df
 import os
 import pytest
+import pandas as pd
 
 def test_backlog_valid():
     """
@@ -23,3 +24,15 @@ def test_backlog_invalid_structure():
     invalid_file = os.path.join(os.path.dirname(__file__), "files", "backlog_invalid.json")
     df = backlog_json_to_df(invalid_file)
     assert df.empty  # Doit retourner un DataFrame vide
+
+def test_backlog_tmp_structure():
+    """
+    Cette fonction teste la structure du fichier JSON temporaire renvoyé lorsque les utilisateurs vont en pause.
+    """
+    
+    tmp_file = os.path.join(os.path.dirname(__file__), "files", "backlog_temporaire.json")
+    df = backlog_json_to_df(tmp_file)
+    
+    # Vérifications
+    assert not df.empty  # Vérifie que le DataFrame n'est pas vide
+    assert list(df.columns) == ["en_tant_que", "fonctionnalite", "objectif", "estimation"]  # Colonnes attendues

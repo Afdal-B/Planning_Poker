@@ -8,11 +8,13 @@ import json
 from pymongo.mongo_client import MongoClient
 
 
+
 client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.85fua.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client['planning_poker']
 tasks_collection = db['tasks']
+rounds_collection = db['rounds']
+rooms_collection = db['rooms']
 
-import pandas as pd
 
 def backlog_json_to_df(backlog_json) -> pd.DataFrame:
     """
@@ -20,25 +22,30 @@ def backlog_json_to_df(backlog_json) -> pd.DataFrame:
     avant insertion en base de données. Elle accepte deux structures :
     1. 3 colonnes : ["en_tant_que", "fonctionnalite", "objectif"]
     2. 4 colonnes : ["en_tant_que", "fonctionnalite", "objectif", "estimation"] (backlog temporaire)
+    avec un champ "tasks" + "game_rule".
     
     :param backlog_json: Le contenu du fichier JSON.
     :returns DataFrame: Un DataFrame contenant les données si le fichier est bien structuré, sinon un DataFrame vide.
     """
     try:
         # Tentative de chargement du fichier JSON
-        backlog_df = pd.read_json(backlog_json)
+        backlog_data = pd.read_json(backlog_json, typ="dict")
     except ValueError as e:
         print(f"Erreur : Le fichier JSON est invalide ou corrompu. Détails : {e}")
         return pd.DataFrame()
-    except FileNotFoundError:
-        print(f"Erreur : Le fichier JSON spécifié est introuvable : {backlog_json}")
+
+    # Vérification si la structure contient "tasks" et "game_rule"
+    if "tasks" in backlog_data or "game_rule" in backlog_data:
+        tasks = backlog_data["tasks"]
+        backlog_df = pd.DataFrame(tasks)
+    else:
+        
         return pd.DataFrame()
 
-    # Vérification de la structure du backlog : soit 3 colonnes, soit 4 colonnes
+    # Vérification de la structure des colonnes
     expected_columns_3 = ["en_tant_que", "fonctionnalite", "objectif"]
     expected_columns_4 = expected_columns_3 + ["estimation"]
 
-    # Vérifier si le fichier a 3 ou 4 colonnes
     if backlog_df.columns.equals(pd.Index(expected_columns_3)):
         # Structure avec 3 colonnes
         print("Structure du backlog : 3 colonnes détectées.")
@@ -46,18 +53,18 @@ def backlog_json_to_df(backlog_json) -> pd.DataFrame:
         # Structure avec 4 colonnes
         print("Structure du backlog : 4 colonnes détectées.")
     else:
-        print("Erreur : Le fichier JSON ne correspond ni à la structure à 3 ni à la structure à 4 colonnes.")
+        print("Erreur : Le fichier JSON ne correspond ni à la structure à 3 colonnes ni à la structure à 4 colonnes.")
         return pd.DataFrame()
 
     # Retourne le DataFrame si la structure est valide
     return backlog_df
 
+
 def export_backlog_to_json(room_code):
     """
     Exporte les colonnes "en_tant_que", "fonctionnalite", "objectif" et "estimation"
-    pour un room_code donné dans un fichier JSON.
+    pour un room_code donné dans un fichier JSON, et ajoute un champ "game_rule".
     """
-    
     try:
         # Récupération des tâches pour le room_code donné
         tasks = list(tasks_collection.find(
@@ -69,13 +76,22 @@ def export_backlog_to_json(room_code):
             print(f"Aucune tâche trouvée pour le room_code: {room_code}")
             return
 
-        # Écriture des données dans un fichier JSON
-        with open("backlog_temporaire.json", "w", encoding="utf-8") as json_file:
-            json.dump(tasks, json_file, ensure_ascii=False, indent=4)
+        # Récupération de la règle de jeu associée
+        game_rule = rooms_collection.find_one(
+            {"room_code": room_code},
+            {"_id": 0, "game_rule": 1}
+        )
 
-        print(f"Les tâches ont été exportées dans 'backlog_temporaire.json'.")
+        # Préparer la structure finale pour l'exportation
+        export_data = {
+            "game_rule": game_rule.get("game_rule", "non définie") if game_rule else "non définie",
+            "tasks": tasks
+        }
+
+        return export_data
     except Exception as e:
         print(f"Une erreur est survenue: {e}")
+
 
 def upload_backlog(backlog_df, room_code)->list: 
     """
@@ -136,6 +152,8 @@ def next_task(room_code):
     return task
 
 
+
+
 def get_all_tasks(room_code):
     """
     Récupère toutes les tâches pour une room spécifique, sans tri.
@@ -156,7 +174,7 @@ def get_all_tasks(room_code):
     return tasks
 
 
-def add_estimation_task(task_id,value):
+def add_estimation_task(round_id,value):
     """
     Met à jour le champ 'estimation' d'une tâche spécifique après validation du vote
 
@@ -169,7 +187,8 @@ def add_estimation_task(task_id,value):
         None: Si aucun document correspondant n'a été trouvé.
     """
     try:
-        
+        round = rounds_collection.find_one({"_id": round_id})
+        task_id = round.get("task_id")
         # Mise à jour de la tâche
         result = tasks_collection.find_one_and_update(
             {"_id": task_id},  # Filtre pour trouver la tâche
