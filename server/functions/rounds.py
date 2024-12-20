@@ -202,11 +202,7 @@ def coffee_break(round_id) -> bool:
     
     votes = [vote['vote_value'] for vote in get_votes_for_task_in_round(round_id)]
 
-<<<<<<< HEAD
     # La même valeur est choisie par tous les utilisateurs et celle-ci est "coffee"
-=======
-    # La même valeur est choisie par tout les utilisateurs et celle-ci est "café"
->>>>>>> 2b44b8efe1031e3bd6749952993722593a40d99d
     return (len(set(votes)) == 1 and votes[0] == "coffee")
 
 def reveal_votes(round_id, room_code):
