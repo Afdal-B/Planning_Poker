@@ -37,6 +37,17 @@ Ces plateformes sont connectées directement au dépôt GitHub, ce qui garantit 
 La configuration des pipelines CI/CD se trouve dans les fichiers `CI.yaml` et `test.yml` dans le répertoire [`.github/workflows`](.github/workflows).
 
 ## Installation 
+### Tester l'application
+Vous avez deux options pour tester l'application :  
+
+1. **Version déployée**  
+   Accédez à la version déployée de l'application via l'URL suivante :  
+   👉 [Planning Poker](https://planning-poker-azure.vercel.app)  
+
+2. **Version locale**  
+   Suivez les étapes ci-dessous pour cloner et exécuter l'application localement :
+
+### Étapes pour la version locale
 1. Clonez le projet :
    ```bash
    git clone https://github.com/Afdal-B/Planning_Poker.git
