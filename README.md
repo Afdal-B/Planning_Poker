@@ -44,10 +44,12 @@ La configuration des pipelines CI/CD se trouve dans les fichiers `CI.yaml` et `t
 
 2. Installez les dépendances :
     * Pour le frontend
+        ```bash
         cd client 
         npm install
 
     * Pour le backend
+        ```bash
         cd server 
         python -m venv .venv
         .venv\Scripts\activate
@@ -55,11 +57,11 @@ La configuration des pipelines CI/CD se trouve dans les fichiers `CI.yaml` et `t
 
 3. Lancer l'application :
     * Pour le frontend 
+        ```bash
         npm start 
     * Pour le backend 
+        ```bash
         flask run 
-
-## Configuration
 
 ## Documentation 
 ### Frontend
