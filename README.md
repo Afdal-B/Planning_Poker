@@ -1,4 +1,4 @@
-# Application planning pocker
+# Application Planning Pocker
 
 ## Présentation du projet
 L'application **Planning Poker** est un outil collaboratif pour les équipes agiles, permettant d'estimer la difficulté des tâches d'un projet à l'aide de cartes virtuelles. Elle offre une interface simple pour créer des sessions et voter sur les tâches. Une fonctionnalité de chat en temps réel est également intégrée, permettant aux membres de l'équipe de communiquer, discuter des estimations et parvenir rapidement à un consensus.
