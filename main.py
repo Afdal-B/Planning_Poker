@@ -150,6 +150,21 @@ def download_json():
     # Envoi du fichier en réponse HTTP
     return send_file(file_name, as_attachment=True)
 
+@socketio.on('vote')
+def vote_round_socket(data):
+    """
+    Cette route permet à un utilisateur de voter dans un round.
+    """
+    # Récupération des données envoyées depuis le front-end
+    # Récupération des autres informations
+    round_id = data.get('round_id')
+    user_id = data.get('user_id')
+    vote_value = data.get('vote_value')
+    
+    # Appel de la fonction pour l'envoi en base de données
+    vote_for_task_in_round(round_id, user_id, vote_value)
+    return jsonify({"message": True})
+
 @socketio.on('members')
 def get_members(data):
     """
@@ -227,6 +242,7 @@ def create_round_socket(data):
     join_room(room_code)
 
 
+
 @app.route('/round', methods = ['GET', 'POST'])
 def display_round_route():
     """
@@ -254,13 +270,16 @@ def join_room_event(data):
 
 
 # Route HTTP pour récupérer l'historique des messages d'une room
-@app.route('/chat/history/<room_id>', methods=['GET'])
-def get_chat_history(room_id):
+@socketio.on('chat_history')
+def handle_chat_history(data):
     """
-    Route pour récupérer l'historique des messages d'une room.
+    Événement WebSocket pour récupérer l'historique des messages d'une room.
     """
-    response, status = fetch_chat_history(room_id)
-    return jsonify(response), status
+    room_code = data.get('room_code')
+    messages, status = fetch_chat_history(room_code)
+    if status == 200:
+        emit('chat_history_response', messages, room=room_code)
+    return messages, status
 
 # Événement WebSocket pour rejoindre une room et intégrer le chat
 @socketio.on('join')
@@ -283,10 +302,12 @@ def handle_send_message(data):
     """
     Gestion de l'envoi d'un message dans une room.
     """
-    response, status = send_message(data)
+    response, status, messages = send_message(data)
     if status == 200:
-        emit("new_message", data, room=data.get("room_id"))
-    return response, status
+        print("début emission")
+        room_id = data.get('room_id')
+        emit("new_message", messages, room=room_id)
+    return response, status, messages
 
 # Événement WebSocket pour ajouter une réaction
 @socketio.on('add_reaction')

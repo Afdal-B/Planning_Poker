@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const RevealVote = ({ votes, OnShowEstimation }) => {
   const [reveal, setReveal] = useState(false);
   return (
-    <div className="max-w-md mx-auto p-4 bg-white shadow rounded">
+    <div className="w-[300px] mx-auto p-4 bg-white shadow rounded">
       <button
         className="mt-4 w-full bg-[#378C9FFF] text-white py-2 rounded "
         onClick={() => {

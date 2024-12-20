@@ -6,9 +6,10 @@ import FeatureListItem from "../components/FeatureListItem";
 import Card from "../components/Card";
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
-import { API_URL, SOCKET_URL } from "../constants/constants";
+import { API_URL} from "../constants/constants";
 import RevealVote from "../components/RevealVote";
 import TaskEstimated from "../components/TaskEstimated";
+import socket from "../components/Socket";
 const VotingPageUser = () => {
   const [members, setMembers] = useState([]);
   const [feature, setFeature] = useState({});
@@ -17,12 +18,12 @@ const VotingPageUser = () => {
   const [estimation, setEstimation] = useState("");
   const [nextButton, setNextButton] = useState(true);
   const [taskEstmatedModal, setTaskEstimatedModal] = useState(false);
+  const [messages,setMessages] = useState([]);
   let hasVoted = false;
-  const socket = io(API_URL, { transports: ["websocket"] });
   socket.on("connect", () => {
     console.log("connexion réussie");
   });
-  const handleDownload = () => {
+  /*const handleDownload = () => {
     try {
       // Appel à l'API pour récupérer le fichier JSON
       axios
@@ -49,12 +50,27 @@ const VotingPageUser = () => {
     } catch (error) {
       console.error("Erreur lors du téléchargement du fichier JSON:", error);
     }
-  };
-  const config = {
+  };*/
+  /*const config = {
     headers: {
       "Content-Type": "application/json",
     },
-  };
+  };*/
+  const handleRevealVote=()=>{
+    socket.emit("reveal_votes", {
+      round_id: localStorage.getItem("round_id"),
+      room_code: localStorage.getItem("room_code"),
+    });
+  }
+  const handleChatMessage = () => {
+    const data =  {
+      user_id: localStorage.getItem("user_id"),
+      room_code: localStorage.getItem("room_code"),
+      message: localStorage.getItem("message"),
+    }
+    console.log("emitting message",data);
+    socket.emit("send_message",data);
+  }
   const handleVote = () => {
     // Préparer les données pour l'événement
     const data = {
@@ -88,8 +104,18 @@ const VotingPageUser = () => {
   socket.on("connect_error", (error) => {
     console.error("Erreur de connexion à Socket.IO :", error);
   });
+
+  const handleCreateRound = () => {
+    // Émettre l'événement 'create_round'
+    socket.emit("create_round", {
+      room_code: localStorage.getItem("room_code"),
+    });
+    console.log("create round emitted")
+    hasVoted = false;
+  };
   
   useEffect(() => {
+    handleCreateRound()
     // Écouter l'événement 'round_created' pour afficher les données
     socket.on("round_created", (data) => {
       console.log("Round Created:", data);
@@ -105,13 +131,25 @@ const VotingPageUser = () => {
     socket.on("get_reveal_votes", (data) => {
       console.log("estimation", data);
       setEstimated(data.estimated);
-      if (estimated) {
-        estimation = setEstimation(String(data.estimation));
+      if (data.estimated) {
+        console.log(String(data.estimation))
+        setEstimation(String(data.estimation));
       }
     });
+    socket.on("new_message", (data) => {
+      console.log("new message reçu", data);
+       setMessages(data);
+   });
+
+   socket.emit('chat_history',{room_code:localStorage.getItem("room_code")});
+   socket.on('chat_history_response',(data)=>{
+    console.log("chat history reçu",data);
+    setMessages(data);
+   })
     const intervalId = setInterval(() => {
       socket.emit("members", { room_code: localStorage.getItem("room_code") });
-    }, 20000000);
+      
+    }, 3000);
     //socket.emit('members', { room_code: localStorage.getItem("room_code") })
     socket.on("get_members", (data) => {
       console.log(data);
@@ -129,13 +167,7 @@ const VotingPageUser = () => {
     };
   }, []);
 
-  const handleCreateRound = () => {
-    // Émettre l'événement 'create_round'
-    socket.emit("create_round", {
-      room_code: localStorage.getItem("room_code"),
-    });
-    hasVoted = false;
-  };
+ 
   return (
     <div className="min-h-screen bg-white">
       <TaskEstimated
@@ -162,32 +194,23 @@ const VotingPageUser = () => {
                   goal={feature.objectif || ""}
                 />
               )}
-              <div className="absolute right-[15px]">
+              <div className="absolute right-[10px]">
                 <button
-                  onClick={
-                    !nextButton
-                      ? () => {
-                          socket.emit("reveal_votes", {
-                            round_id: localStorage.getItem("round_id"),
-                            room_code: localStorage.getItem("room_code"),
-                          });
-                          setNextButton(true);
-                        }
-                      : handleCreateRound
-                  }
-                  className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764]"
+                onClick={handleCreateRound}
                 >
-                  {!nextButton ? "estimation" : "Next"}
+                  Next
                 </button>
               </div>
             </div>
-            <button
+            
+          </div>
+          <div className="flex w-[100%] items-center justify-center mt-[2px] gap-4">
+          <button
               onClick={() => {
                 socket.emit("users_votes", {
                   round_id: localStorage.getItem("round_id"),
                   room_code: localStorage.getItem("room_code"),
                 });
-                setNextButton(false);
               }}
             >
               <RevealVote
@@ -201,19 +224,11 @@ const VotingPageUser = () => {
                 }}
               ></RevealVote>
             </button>
-          </div>
-          <div className="flex w-[100%] items-center justify-center mt-[2px]">
             <button
               onClick={handleVote}
               className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764]"
             >
               Vote
-            </button>
-            <button
-              onClick={handleDownload}
-              className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764]"
-            >
-              Download
             </button>
           </div>
           <div className="flex gap-6 p-6 border-t">
@@ -232,7 +247,7 @@ const VotingPageUser = () => {
         </div>
         <div className="w-80 flex flex-col border-l">
           <MembersList members={members} />
-          <ChatSection />
+          <ChatSection messages = {messages} handleSend={handleChatMessage}/>
         </div>
       </div>
     </div>

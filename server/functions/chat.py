@@ -13,6 +13,7 @@ client = MongoClient("mongodb+srv://aithassouelias57:xBG54MaCnybEuSTk@cluster0.8
 db = client['planning_poker']
 messages_collection = db['messages']
 rooms_collection = db['rooms']
+users_collection = db['users']
 
 #Définition de la fonction d'envoi de message
 def send_message(data):
@@ -20,13 +21,14 @@ def send_message(data):
     Cette fonction permet d'envoyer un message dans une room spécifique et l'enregistre en base de données.
 
     :param data: Un dictionnaire contenant les informations du message.
-    :return: Un message de confirmation ou d'erreur.
+    :return: Un message de confirmation ou d'erreur ainsi qu'une liste de tous les messages de la room.
     """
     room_code = data.get('room_code')
     #on récupère le room_id à partir du room_code
     room_id = rooms_collection.find_one({"room_code": room_code}).get("_id")
     user_id = data.get('user_id')
-    content = data.get('content')
+    user_name=users_collection.find_one({"_id": user_id}).get("username")
+    content = data.get('message')
 
     if not room_id or not user_id or not content:
         return {"error": "room_id, user_id, and content are required"}, 400
@@ -38,8 +40,9 @@ def send_message(data):
         "_id": message_id,
         "room_id": room_id,
         "user_id": user_id,
+        "user_name": user_name,
         "content": content,
-        "sent_at": datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+        "sent_at": datetime.now().strftime('%H:%M'),
         "reactions": {}  # Initialisation des réactions comme un dictionnaire vide
     }
 
@@ -52,16 +55,10 @@ def send_message(data):
         {"$push": {"chat": message_id}}
     )
 
-    # Envoi du message aux utilisateurs de la room
-    emit("new_message", {
-        "_id": message_id,
-        "room_id": room_id,
-        "user_id": user_id,
-        "content": content,
-        "sent_at": message["sent_at"],
-        "reactions": message["reactions"]
-    }, room=room_id)
-    return {"message": "Message sent successfully"}, 200
+    # Récuperation de la liste des messages de la room
+    messages=list(messages_collection.find({"room_id": room_id}))
+
+    return {"message": "Message sent successfully"}, 200, messages
 
 #Définition de la fonction de l'ajout de réaction
 def add_reaction(data):
@@ -131,4 +128,4 @@ def fetch_chat_history(room_code):
     messages = list(messages_collection.find({"_id": {"$in": message_ids}}))
 
 
-    return {"chat": messages}, 200
+    return  messages, 200

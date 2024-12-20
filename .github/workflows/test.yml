@@ -57,18 +57,3 @@ jobs:
         source venv/bin/activate 
         cd server/docs  
         make html
-
-    - name: Commit and push documentation # Commit et pousse la documentation générée vers le dépôt Git
-      env:
-        GITHUB_TOKEN: ${{ secrets.P_A_T }}  # Définit la variable d'environnement GITHUB_TOKEN
-      run: | # Configure Git, récupère les dernières modifications, commit et push la documentation
-        cd server
-        git config --local user.email "afdalbouraima2@gmail.com"
-        git config --local user.name "Bouraima"
-        git fetch --all
-        git checkout main
-        git stash
-        git pull --rebase origin main
-        git add docs/
-        git commit -m "Mise à jour de la documentation Back-end"
-        git push https://x-access-token:${GITHUB_TOKEN}@github.com/Afdal-B/Planning_Poker.git HEAD:main

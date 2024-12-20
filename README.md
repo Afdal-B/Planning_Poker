@@ -61,7 +61,6 @@ Vous avez deux options pour tester l'application :
 
     * Pour le backend
         ```bash
-        cd server 
         python -m venv .venv
         .venv\Scripts\activate
         pip install -r requirements.txt
@@ -72,7 +71,7 @@ Vous avez deux options pour tester l'application :
         npm start 
     * Pour le backend 
         ```bash
-        flask run 
+        python main.py  
 
 ## Documentation 
 ### Frontend

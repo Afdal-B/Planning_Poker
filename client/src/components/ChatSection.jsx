@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Send } from "lucide-react";
 
-const ChatSection = () => {
+const ChatSection = ({messages,handleSend}) => {
   const [message, setMessage] = useState("");
-  const [messages] = useState([
+  /*const [messages] = useState([
     {
       id: 1,
       user: "Annie Haley",
@@ -13,7 +13,7 @@ const ChatSection = () => {
         "Welcome everyone! We will vote for the first task to take it as a reference",
       timestamp: "19:19",
     },
-  ]);
+  ]);*/
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,16 +27,16 @@ const ChatSection = () => {
         <h3 className="font-semibold mb-4">Messages</h3>
         <div className="space-y-4 max-h-60 overflow-y-auto">
           {messages.map((msg) => (
-            <div key={msg.id} className="flex items-start gap-3">
+            <div key={msg._id} className="flex items-start gap-3">
               <img
                 src={msg.avatar}
-                alt={msg.user}
+                alt={msg.user_name}
                 className="w-8 h-8 rounded-full"
               />
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="font-medium">{msg.user}</span>
-                  <span className="text-sm text-gray-500">{msg.timestamp}</span>
+                  <span className="font-medium">{msg.user_name}</span>
+                  <span className="text-sm text-gray-500">{msg.sent_at}</span>
                 </div>
                 <p className="text-gray-700">{msg.content}</p>
               </div>
@@ -55,6 +55,10 @@ const ChatSection = () => {
         <button
           type="submit"
           className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          onClick={()=>{
+            localStorage.setItem("message", message);
+            handleSend();
+          }}
         >
           <Send size={20} />
         </button>
