@@ -19,7 +19,7 @@ const VotingPageUser = () => {
   const [nextButton, setNextButton] = useState(true);
   const [taskEstmatedModal, setTaskEstimatedModal] = useState(false);
   let hasVoted = false;
-  const socket = io(API_URL);
+  const socket = io(API_URL, { transports: ["websocket"] });
   socket.on("connect", () => {
     console.log("connexion réussie");
   });
@@ -113,8 +113,8 @@ const VotingPageUser = () => {
     return () => {
       socket.off("round_created");
       socket.off("error");
+      clearInterval(intervalId);
     };
-    return () => clearInterval(intervalId);
   }, []);
 
   const handleCreateRound = () => {

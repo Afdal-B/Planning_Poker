@@ -18,7 +18,7 @@ app = Flask(__name__)
 #Récupération de la clé secrète
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 #Initialisation de l'objet SocketIO
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*",logger=True,engineio_logger=True)
 timers = {}
 CORS(app)
 
