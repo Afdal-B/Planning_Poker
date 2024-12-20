@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../assets/icone.png";
+import logo from "../assets/LOGO.svg";
 
 /**
  * Composant Header qui affiche le logo et le titre de l'application.

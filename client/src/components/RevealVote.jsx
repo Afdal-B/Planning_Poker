@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 
-const RevealVote = () => {
-  const votes = [
-    { name: "Annie Haley", avatar: "https://via.placeholder.com/50", score: 5 },
-    { name: "Annie Haley", avatar: "https://via.placeholder.com/50", score: 2 },
-    { name: "Annie Haley", avatar: "https://via.placeholder.com/50", score: 2 },
-    { name: "Annie Haley", avatar: "https://via.placeholder.com/50", score: 3 },
-    { name: "Annie Haley", avatar: "https://via.placeholder.com/50", score: 1 },
-    { name: "Annie Haley", avatar: "https://via.placeholder.com/50", score: 8 },
-  ];
+const RevealVote = ({votes}) => {
   const [reveal, setReveal] = useState(false);
   return (
     <div className="max-w-md mx-auto p-4 bg-white shadow rounded">
@@ -32,16 +24,16 @@ const RevealVote = () => {
                 <div className="flex items-center space-x-3">
                   <img
                     src={vote.avatar}
-                    alt={vote.name}
+                    alt={vote.username}
                     className="w-10 h-10 rounded-full"
                   />
                   <div>
-                    <p className="text-sm font-medium">{vote.name}</p>
+                    <p className="text-sm font-medium">{vote.username}</p>
                     <p className="text-xs text-gray-500">Has voted</p>
                   </div>
                 </div>
                 <span className="text-xl font-bold text-[#378C9FFF]">
-                  {vote.score}
+                  {vote.vote_value}
                 </span>
               </li>
             ))}
