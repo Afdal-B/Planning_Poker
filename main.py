@@ -46,6 +46,7 @@ def create_room_route():
     # Renvoie du room code et de l'user_id du createur au front-end
     return jsonify(data_dict)
 
+
 @app.route('/join_room', methods = ['GET', 'POST'])
 def join_room_route():
     """
@@ -113,21 +114,6 @@ def backlog_route():
 
     return jsonify({"tasks": tasks})
 
-@app.route('/export_backlog', methods = ['GET', 'POST'])
-def export_backlog_route():
-    """
-    Cette route permet de récupérer le room code et l'afficher sur le front-end pour que le créateur de la room puisse le partager
-    """
-    # Récupération des données envoyées depuis le front-end
-    #data = request.get_json()
-
-    # Récupération des autres informations du formulaire
-    #room_code = data.get('room_code')
-
-    # Appel de la fonction pour l'envoi en base de données
-    #export_backlog_to_json(room_code)
-
-    return 'Hello, World!'
 
 @app.route('/download-json', methods=['GET'])
 def download_json():
@@ -240,7 +226,6 @@ def display_round_route():
 
     # Appel de la fonction pour l'envoi en base de données
     task = next_task(room_code)
-    print(task)
 
     round_id = create_round(task["_id"], room_code)
 
