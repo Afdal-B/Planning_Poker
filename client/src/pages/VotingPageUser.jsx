@@ -4,7 +4,6 @@ import MembersList from "../components/MembersList";
 import ChatSection from "../components/ChatSection";
 import FeatureListItem from "../components/FeatureListItem";
 import Card from "../components/Card";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { API_URL, SOCKET_URL } from "../constants/constants";
@@ -58,26 +57,39 @@ const VotingPageUser = () => {
     },
   };
   const handleVote = () => {
-    const data = JSON.stringify({
+    // Préparer les données pour l'événement
+    const data = {
       round_id: localStorage.getItem("round_id"),
       user_id: localStorage.getItem("user_id"),
       vote_value: localStorage.getItem("vote"),
-    });
+    };
+  
     console.log(data);
-    axios
-      .post(API_URL + "/vote", data, config)
-      .then((response) => {
+  
+    // Émettre un événement de vote au serveur
+    socket.emit("vote", data, (response) => {
+      // Callback pour gérer la réponse du serveur
+      if (response.success) {
         console.log("Succès du vote");
-      })
-      .catch((error) => {
-        console.log("erreur lors du vote", error);
-      });
+      } else {
+        console.log("Erreur lors du vote :", response.error);
+      }
+    });
+  
+    // Mettre à jour l'état de vote
     hasVoted = true;
   };
+  
+  // Gérer la connexion au serveur Socket.IO
   socket.on("connect", () => {
-    console.log("Réussi");
+    console.log("Connexion réussie au serveur Socket.IO");
   });
-
+  
+  // Gérer les erreurs de connexion
+  socket.on("connect_error", (error) => {
+    console.error("Erreur de connexion à Socket.IO :", error);
+  });
+  
   useEffect(() => {
     // Écouter l'événement 'round_created' pour afficher les données
     socket.on("round_created", (data) => {
@@ -125,49 +137,6 @@ const VotingPageUser = () => {
     });
     hasVoted = false;
   };
-
-  /*
-
-  const fetchCurrentFeature = () => {
-    try {
-      axios
-        .post(
-          API_URL + "/round",
-          JSON.stringify({ room_code: localStorage.getItem("room_code") }),
-          config
-        )
-        .then((response) => {
-          console.log(response.data.feature);
-          localStorage.setItem("round_id", response.data.room_id);
-          setFeature(response.data.task);
-        });
-    } catch (error) {
-      console.error("Erreur lors de la récupération de la feature:", error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchMembers = () => {
-      try {
-        axios
-          .post(
-            API_URL + "/users",
-            JSON.stringify({ room_code: localStorage.getItem("room_code") }),
-            config
-          )
-          .then((response) => {
-            console.log(response.data.users);
-            setMembers(response.data.users);
-          });
-      } catch (error) {
-        console.error("Erreur lors de la récupération des users:", error);
-      }
-    };
-
-    fetchMembers();
-    fetchCurrentFeature();
-  }, []);
-  */
   return (
     <div className="min-h-screen bg-white">
       <TaskEstimated
