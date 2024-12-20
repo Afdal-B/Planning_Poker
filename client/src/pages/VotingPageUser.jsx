@@ -4,7 +4,6 @@ import MembersList from "../components/MembersList";
 import ChatSection from "../components/ChatSection";
 import FeatureListItem from "../components/FeatureListItem";
 import Card from "../components/Card";
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import { API_URL, SOCKET_URL } from "../constants/constants";
