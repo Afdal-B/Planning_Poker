@@ -196,6 +196,8 @@ const VotingPageUser = () => {
               )}
               <div className="absolute right-[10px]">
                 <button
+                className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764]"
+
                 onClick={handleCreateRound}
                 >
                   Next
@@ -226,7 +228,7 @@ const VotingPageUser = () => {
             </button>
             <button
               onClick={handleVote}
-              className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764]"
+              className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764] mt-4"
             >
               Vote
             </button>

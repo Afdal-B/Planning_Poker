@@ -61,6 +61,12 @@ const VotingPage = () => {
           <div className="p-6 flex-1 overflow-auto">
             <BacklogTable backlogItems={items} />
           </div>
+          <button
+          className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764]"
+          onClick={()=>{window.location.href="/voting"}}
+>
+            Next
+          </button>
         </div>
         <div className="w-80 flex flex-col border-l">
           <MembersList members={members || []} />
