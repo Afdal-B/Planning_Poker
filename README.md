@@ -40,12 +40,17 @@ La configuration des pipelines CI/CD se trouve dans les fichiers `CI.yaml` et `t
 1. Clonez le projet :
    ```bash
    git clone https://github.com/Afdal-B/Planning_Poker.git
+   cd <nom_du_repo>
 
 2. Installez les dépendances :
-    * Pour le frontend 
+    * Pour le frontend
+        cd client 
         npm install
 
     * Pour le backend
+        cd server 
+        python -m venv .venv
+        .venv\Scripts\activate
         pip install -r requirements.txt
 
 3. Lancer l'application :
@@ -54,9 +59,21 @@ La configuration des pipelines CI/CD se trouve dans les fichiers `CI.yaml` et `t
     * Pour le backend 
         flask run 
 
+## Configuration
+
 ## Documentation 
+### Frontend
+La documentation du frontend a été générée automatiquement à l'aide de scripts npm. Elle se trouve dans le dossier [`client/docs`](client/docs) Pour y accéder :
 
+* Clonez le projet en local.
+* Explorez les fichiers disponibles dans le dossier client/docs pour consulter les détails des composants, des hooks et des fonctionnalités du frontend.
 
+### Backend 
+La documentation du backend a été générée automatiquement avec Sphinx. Elle est disponible dans le dossier [`server/docs/_build/html`](server/docs/_build/html). Pour y accéder :
+
+* Clonez le projet en local.
+* Ouvrez le fichier index.html situé dans le dossier server/docs/_build/html avec votre navigateur.
+* Consultez les instructions détaillées pour les API et les configurations du backend.
 
 
 ## Les contributeurs
@@ -64,3 +81,7 @@ La configuration des pipelines CI/CD se trouve dans les fichiers `CI.yaml` et `t
 - Afdal BOURAIMA
 - Yousra BOUHANNA
 - Elias AIT HASSOU
+
+## Licence
+
+Aucune licence spécifique n'a encore été attribuée à ce projet. Tous les droits sont réservés par les contributeurs. Si vous souhaitez utiliser ou modifier ce projet, veuillez contacter les contributeurs pour obtenir leur autorisation.
