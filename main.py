@@ -65,38 +65,25 @@ def join_room_route():
 
     return jsonify({"user_id":user_id, "room_code":room_code})
 
-@app.route('/vote', methods = ['GET', 'POST'])
-def vote_round_route():
+@socketio.on('vote')
+def handle_vote(data):
     """
-    Cette route permet à un utilisateur de voter dans un round.
+    Événement pour voter dans un round. Reçoit les données du front-end et enregistre le vote.
     """
-    # Récupération des données envoyées depuis le front-end
-    data = request.get_json()
-
-    # Récupération des autres informations
     round_id = data.get('round_id')
     user_id = data.get('user_id')
     vote_value = data.get('vote_value')
-    
-    # Appel de la fonction pour l'envoi en base de données
+
+    if not round_id or not user_id or vote_value is None:
+        emit('vote_error', {'error': 'Les données de vote sont incomplètes.'})
+        return
+
+    # Enregistrer le vote
     vote_for_task_in_round(round_id, user_id, vote_value)
-    return jsonify({"message": True})
 
-@app.route('/users', methods = ['GET', 'POST'])
-def users_route():
-    """
-    Cette route permet d'afficher touts les utilisateurs de la room'
-    """
-    # Récupération des données envoyées depuis le front-end
-    data = request.get_json()
+    # Émettre un message de confirmation au client
+    emit('vote_success', {"message": True})
 
-    # Récupération des autres informations du formulaire
-    room_code = data.get('room_code')
-
-    # Appel de la fonction pour l'envoi en base de données
-    users = get_users_in_room(room_code)
-
-    return jsonify({"users": users})
 
 @app.route('/backlog', methods = ['GET', 'POST'])
 def backlog_route():
