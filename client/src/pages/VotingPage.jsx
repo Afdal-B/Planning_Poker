@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from "react";
 import MembersList from "../components/MembersList";
-import ChatSection from "../components/ChatSection";
 import BacklogTable from "../components/BacklogTable";
 import axios from "axios";
 import { API_URL } from "../constants/constants";
-import TaskEstimated from "../components/TaskEstimated";
 const VotingPage = () => {
   const [items, setItems] = useState([]);
   const [members, setMembers] = useState([]);
-  const [estimated,setEstimated] = useState(false);
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -62,15 +59,16 @@ const VotingPage = () => {
             <BacklogTable backlogItems={items} />
           </div>
           <button
-          className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764]"
-          onClick={()=>{window.location.href="/voting"}}
->
+            className="bg-[#378C9FFF] text-white px-4 py-2 rounded hover:bg-[#1b5764]"
+            onClick={() => {
+              window.location.href = "/voting-page-user";
+            }}
+          >
             Next
           </button>
         </div>
         <div className="w-80 flex flex-col border-l">
           <MembersList members={members || []} />
-          <ChatSection />
         </div>
       </div>
     </div>
